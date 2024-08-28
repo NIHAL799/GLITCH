@@ -134,8 +134,9 @@ DATABASES = {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
         'NAME': 'Glitch_database',
         'USER': config('DB_USER'),
-        'PASSWORD': config('PASSWORD')
-        
+        'PASSWORD': config('PASSWORD'),
+        'HOST': 'localhost',
+        'PORT': '5432',
     }
 }
 
