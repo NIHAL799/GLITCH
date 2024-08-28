@@ -1,0 +1,233 @@
+{% load static %}
+<!DOCTYPE HTML>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <title>DigiHub Adminpage</title>
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta property="og:title" content="">
+    <meta property="og:type" content="">
+    <meta property="og:url" content="">
+    <meta property="og:image" content="">
+
+    {% comment %} <link rel="shortcut icon" type="image/x-icon" href="{% static 'admin/assets/imgs/theme/favicon.svg' %}"> {% endcomment %}
+    
+    <link href="{% static 'assets/css/main.css' %}" rel="stylesheet" type="text/css" />
+    <title>{% block title %}My Site{% endblock %}</title>
+</head>
+
+<style>
+    .submenu {
+        display: none;
+        position: absolute;
+        background-color: #fff;
+        box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+        padding: 10px;
+        z-index: 1;
+        margin-top: 10px; /* Space between the link and submenu */
+    }
+    
+    .submenu a {
+        display: block;
+        padding: 5px 10px;
+        color: #333;
+        text-decoration: none;
+    }
+    
+    .submenu a:hover {
+        background-color: #f0f0f0;
+    }
+    .menu-item {
+        position: relative; /* Positioning context for submenu */
+    }
+    
+    .menu-item .submenu {
+        display: none; /* Hide submenu by default */
+        position: absolute; /* Position submenu absolutely */
+        top: 100%; /* Position submenu below the menu item */
+        left: 0; /* Align submenu to the left of the menu item */
+        background-color: white; /* Background color of the submenu */
+        padding: 0; /* Remove padding */
+        margin: 0; /* Remove margin */
+        list-style: none; /* Remove bullets */
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Add a slight shadow */
+    }
+    
+    .menu-item:hover .submenu {
+        display: block; /* Show submenu on hover */
+    }
+    
+    .submenu a {
+        display: block; /* Make submenu items block-level elements */
+        padding: 10px 15px; /* Padding for submenu items */
+        text-decoration: none; /* Remove underline from links */
+        color: black; /* Text color */
+    }
+    
+    .submenu a:hover {
+        background-color: #f0f0f0; /* Background color on hover */
+    }
+    Explanation
+
+</style>
+
+<body>
+    <div class="screen-overlay"></div>
+    <aside class="navbar-aside" id="offcanvas_aside">
+        <nav>
+            <ul class="menu-aside">
+                <li class="menu-item ">
+                    <a class="menu-link" href="{% url 'superuser:dashboard' %}"> <i class="icon material-icons md-home"></i>
+                        <span class="text">Dashboard</span>
+                    </a>
+                </li>
+                <li class="menu-item has-submenu">
+                    <a class="menu-link" href="{% url 'superuser:customer_view' %}"> <i class="icon material-icons md-store"></i>
+                        <span class="text">Customers</span>
+                    </a>
+                    <div class="submenu">
+                        <a href="{% url 'superuser:customer_view' %}">Customers_list</a>
+                    </div>
+                </li>
+                
+                <li class="menu-item has-submenu">
+                    <a class="menu-link" href="{% url 'category:category_list' %}"> <i class="icon material-icons md-shopping_bag"></i>
+                        <span class="text">Category</span>
+                    </a>
+                    <div class="submenu">
+                        <h6>Brand & Category</h6>
+                        {% comment %} <a href="{% url 'category' %}">Categories</a>
+                        <a href="{% url 'admin_brands' %}">Brands</a><br><br> {% endcomment %}
+                        <h6>Products</h6>
+                        
+                        {% comment %} <a href="{% url 'product:admin_product_list' %}">Product List</a>
+                        <a href="{% url 'product:admin_add_products' %}">Add product</a>
+                        <h6>Variants</h6> {% endcomment %}
+                        {% comment %} <a href="{% url 'product_attributes' %}">Attributes</a>
+                        <a href="{% url 'variant_add' %}">Add Variant</a>
+                        <a href="{% url 'variant_list' %}">variant list</a> {% endcomment %}
+                    </div>
+                </li>
+                <li class="menu-item has-submenu">
+                    <a class="menu-link" href="{% url 'product:admin_product_list' %}"> <i class="icon material-icons md-store"></i>
+                        <span class="text">Products</span>
+                    </a>
+                    <div class="submenu">
+                        {% comment %} <a href="{% url 'create_offer' %}">Create offer</a>
+                        <a href="{% url 'referral_offer_list' %}">Referral offer list</a> {% endcomment %}
+                    </div>
+                </li>
+                <li class="menu-item has-submenu">
+                    <a class="menu-link" href="{% url 'superuser:best_selling' %}"> <i class="icon material-icons md-shopping_cart"></i>
+                        <span class="text">Best Selling</span>
+                    </a>
+                    <div class="submenu">
+                        {% comment %} <a href="{% url 'order_list' %}">Order list</a>
+                    </div> {% endcomment %}
+                </li>
+                <li class="menu-item has-submenu">
+                    <a class="menu-link" href="{% url 'order:order_list_admin' %}"> <i class="icon material-icons md-shopping_cart"></i>
+                        <span class="text">Orders</span>
+                    </a>
+                    <div class="submenu">
+                        {% comment %} <a href="{% url 'order_list' %}">Order list</a>
+                    </div> {% endcomment %}
+                </li>
+                <li class="menu-item has-submenu">
+                    <a class="menu-link" href="{% url 'coupons:coupon_list' %}"> <i class="icon material-icons md-shopping_cart"></i>
+                        <span class="text">Coupon Management</span>
+                    </a>
+                    <div class="submenu">
+                        {% comment %} <a href="{% url 'best_selling_product' %}">Product</a>
+                        <a href="{% url 'best_selling_brand' %}">Brand</a> {% endcomment %}
+                    </div>
+                </li> 
+                <li class="menu-item has-submenu">
+                    <a class="menu-link" href="{% url 'superuser:sales_report' %}"> <i class="icon material-icons md-store"></i>
+                        <span class="text">Sales Report</span>
+                    </a>
+                    <div class="submenu">
+                        <a href="{% url 'superuser:sales_report' %}">Sales Report</a>
+                    </div>
+                </li>
+                <li class="menu-item has-submenu">
+                    <a class="menu-link" href="#"> <i class="icon material-icons md-add_box"></i>
+                        <span class="text">Logout</span>
+                    </a>
+                    <div class="submenu">
+                        <a href="{% url 'superuser:admin_logout' %}">Logout</a>
+                    </div>
+                </li>
+            </ul>
+            <hr>
+            <br>
+            <br>
+        </nav>
+    </aside>
+    <main class="main-wrap">
+        <header class="main-header navbar">
+            <div class="col-search">
+                <form class="searchform">
+                    <datalist id="search_terms">
+                        <option value="Products">
+                        <option value="New orders">
+                        <option value="Apple iphone">
+                        <option value="Ahmed Hassan">
+                    </datalist>
+                </form>
+            </div>
+            <div class="col-nav">
+                <button class="btn btn-icon btn-mobile me-auto" data-trigger="#offcanvas_aside"> <i class="material-icons md-apps"></i> </button>
+                <ul class="nav">
+                    <li class="nav-item">
+                        <a class="nav-link btn-icon darkmode" href="#"> <i class="material-icons md-nights_stay"></i> </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="#" class="requestfullscreen nav-link btn-icon"><i class="material-icons md-cast"></i></a>
+                    </li>
+                    <li class="dropdown nav-item">
+                        <a class="dropdown-toggle" data-bs-toggle="dropdown" href="#" id="dropdownAccount" aria-expanded="false"> <img class="img-xs rounded-circle" src="{% static 'admin/assets/imgs/people/avatar2.jpg' %}" alt="User"></a>
+                        <div class="dropdown-menu dropdown-menu-end" aria-labelledby="dropdownAccount">
+                            <div class="dropdown-divider"></div>
+                            <a class="dropdown-item text-danger" href="{% url 'superuser:admin_logout' %}"><i class="material-icons md-exit_to_app"></i>Logout</a>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </header>
+
+        {% block content %}
+        {% endblock %}
+
+        <footer class="main-footer font-xs">
+            <div class="row pb-30 pt-15">
+                <div class="col-sm-6">
+                    <script>
+                        document.write(new Date().getFullYear())
+                    </script> DigiHub
+                </div>
+                <div class="col-sm-6">
+                    <div class="text-sm-end">
+                        All rights reserved
+                    </div>
+                </div>
+            </div>
+        </footer>
+    </main>
+
+    <script src="{% static 'assets/js/vendors/jquery-3.6.0.min.js' %}"></script>
+    <script src="{% static 'assets/js/vendors/bootstrap.bundle.min.js' %}"></script>
+    <script src="{% static 'assets/js/vendors/select2.min.js' %}"></script>
+    <script src="{% static 'assets/js/vendors/perfect-scrollbar.js' %}"></script>
+    <script src="{% static 'assets/js/vendors/jquery.fullscreen.min.js' %}"></script>
+    <script src="{% static 'assets/js/vendors/chart.js' %}"></script>
+    <script src="{% static 'assets/js/main.js' %}" type="text/javascript"></script>
+
+
+</body>
+
+
+</html>

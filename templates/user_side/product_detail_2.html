@@ -1,0 +1,507 @@
+{% extends "user_side/base2.html" %}
+{% load static %}
+{% block content %}
+<style>
+.selected-size {
+    background-color: orange;
+    border-radius: 50%;
+    color: white;
+    padding: 5px 10px;
+    }
+
+    .star-box-wrap {
+        display: flex;
+        flex-direction: row;
+        cursor: pointer;
+    }
+    
+    .single-ratting-star {
+        display: inline-flex;
+        margin-right: 5px;
+    }
+    
+    .single-ratting-star i {
+        font-size: 24px; /* Adjust size as needed */
+        color: #ccc; /* Default star color */
+        transition: color 0.3s; /* Smooth color transition */
+    }
+    
+    .single-ratting-star.selected i,
+    .single-ratting-star:hover i {
+        color: gold; /* Highlighted star color */
+    }
+
+    .yellow {
+        color: Gold;
+    }
+</style>
+{% load multiply %}
+        <div class="product-details-area section-padding-1 pb-90">
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="product-dec2-48">
+                        <div class="product-details-tab">
+                            <div class="pro-dec-big-img-slider">
+                                <div class="easyzoom-style">
+                                    <div class="easyzoom easyzoom--overlay">
+                                        <a href="{{product.product_image.url}}">
+                                            <img src="{{product.product_image.url}}" alt="">
+                                        </a>
+                                    </div>
+                                    <a class="easyzoom-pop-up img-popup" href="assets/images/product-details/b-large-1.jpg"><i class="dlicon ui-1_zoom-in "></i></a>
+                                </div>
+                                <div class="easyzoom-style">
+                                    <div class="easyzoom easyzoom--overlay">
+                                        <a href="{{product.product_image2.url}}">
+                                            <img src="{{product.product_image2.url}}" alt="">
+                                        </a>
+                                    </div>
+                                    <a class="easyzoom-pop-up img-popup" href="assets/images/product-details/b-large-2.jpg"><i class="dlicon ui-1_zoom-in "></i></a>
+                                </div>
+                                <div class="easyzoom-style">
+                                    <div class="easyzoom easyzoom--overlay">
+                                        <a href="{{product.product_image3.url}}">
+                                            <img src="{{product.product_image3.url}}" alt="">
+                                        </a>
+                                    </div>
+                                    <a class="easyzoom-pop-up img-popup" href="assets/images/product-details/b-large-3.jpg"><i class="dlicon ui-1_zoom-in "></i></a>
+                                </div>
+                                <div class="easyzoom-style">
+                                    <div class="easyzoom easyzoom--overlay">
+                                        <a href="{{product.product_image4.url}}">
+                                            <img src="{{product.product_image4.url}}" alt="">
+                                        </a>
+                                    </div>
+                                    <a class="easyzoom-pop-up img-popup" href="assets/images/product-details/b-large-4.jpg"><i class="dlicon ui-1_zoom-in "></i></a>
+                                </div>
+                                <div class="easyzoom-style">
+                                    <div class="easyzoom easyzoom--overlay">
+                                        <a href="assets/images/product-details/b-large-2.jpg">
+                                            <img src="assets/images/product-details/large-2.jpg" alt="">
+                                        </a>
+                                    </div>
+                                    <a class="easyzoom-pop-up img-popup" href="assets/images/product-details/b-large-2.jpg"><i class="dlicon ui-1_zoom-in "></i></a>
+                                </div>
+                            </div>
+                            <div class="product-dec-slider-2 product-dec-small-style2">
+                                <div class="product-dec-small active">
+                                    <img src="assets/images/product-details/small-1.jpg" alt="">
+                                </div>
+                                <div class="product-dec-small">
+                                    <img src="assets/images/product-details/small-2.jpg" alt="">
+                                </div>
+                                <div class="product-dec-small">
+                                    <img src="assets/images/product-details/small-3.jpg" alt="">
+                                </div>
+                                <div class="product-dec-small">
+                                    <img src="assets/images/product-details/small-4.jpg" alt="">
+                                </div>
+                                <div class="product-dec-small">
+                                    <img src="assets/images/product-details/small-2.jpg" alt="">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="product-dec2-52">
+                        <div class="row">
+                            <div class="product-details-col-72">
+                                <div class="product-details-content p-dec-content-edit">
+                                    <div class="pro-dec-next-prev">
+                                        <a class="prev" href="#"><i class="dlicon arrows-1_tail-left"></i></a>
+                                        <a class="next" href="#"><i class="dlicon arrows-1_tail-right"></i></a>
+                                    </div>
+                                    <h2 class="uppercase">{{product.product_name}}</h2>
+                                    
+
+                                    <div class="product-details-ratting-wrap">
+                                        <div class="product-details-ratting">
+                                            {% for i in 5|times %}
+                                                <i class="{% if i <= average_rating %}yellow {% endif %}fa fa-star"></i>
+                                            {% endfor %}
+                                        </div>
+                                        <a href="#
+                                        "> ({{ product.ratings.count }} customer rating)</a>
+                                    </div>
+                                    {% if product.category.is_offer_available %}
+                                        <h3>
+                                            <span class="old-price"><del>₹{{ product.price|floatformat:2 }}</del></span>
+                                            <span class="new-price">₹{{ product.discounted_price|floatformat:2 }}</span>
+                                            <span class="discount-percentage">Save {{ product.category.discount_percentage }}%!</span>
+                                        </h3>
+                                    {% else %}
+                                        <h3>₹{{ product.discounted_price|floatformat:2 }}</h3>
+                                    {% endif %}
+                                    <div class="product-details-peragraph">
+                                        <ul>
+                                            <li>{{product.description}}</li>
+                                            
+                                        </ul>
+                                    </div>
+                                    <div class="configurable-wrap">
+                                        <div class="configurable-size">
+                                            <span>Size</span>
+                                            <ul>
+                                                {% for size in product.sizes.all %}
+                                                    {% if size.stock != 0 %}
+                                                        <li><a href="#" class="size-option" data-size="{{ size.size }}">
+                                                            <span title="{{ size.size }}" class="swatch-anchor">{{ size.size }}</span></a>
+                                                        </li>
+                                                    {% endif %}
+                                                {% endfor %}
+                                            </ul>
+                                        </div>
+                                        
+                                        <!-- Hidden form to add to cart -->
+                                        <form id="add-to-cart-form" action="{% url "cart:add_to_cart" product.id %}" method="post" style="display:none;">
+                                            {% csrf_token %}
+                                            <input type="hidden" name="size" id="selected-size">
+                                            <input type="hidden" name="qtybutton" id="hidden-qtybutton" value="1" min='1' max='5'>
+                                        </form>
+                                        
+                                        <div class="product-details-action-wrap dec-action-border-none">
+                                            <div class="product-details-quality">
+                                                <div class="cart-plus-minus">
+                                                    <input class="cart-plus-minus-box" type="text" id="visible-qtybutton" name="qtybutton" value="1">
+                                                </div>
+                                            </div>
+                                            <div class="product-details-cart">
+                                                <a id="add-to-cart-btn" title="Add to cart" href="#">Add to cart</a>
+                                            </div>
+                                        </div>
+                                        <div class="product-details-wishlist">
+                                            <a title="Add to wishlist" href="{% url "wishlist:add_to_wishlist" product.id %}"><i class="fa fa-heart"></i></a>
+                                        </div>
+                                        <div class="product-details-compare">
+                                            <a title="Add to compare" href="#"><i class="dlicon arrows-4_compare"></i></a>
+                                        </div>
+                                    </div>
+                                    <div class="product-details-info">
+                                        <a href="#"><i class="dlicon location_pin"></i>Store availability</a>
+                                        <a href="#"><i class="dlicon envir_car"></i>Delivery and return</a>
+                                        <a href="#"><i class="dlicon design_measure-17"></i>Size Guide</a>
+                                    </div>
+                                    <div class="product-details-meta">
+                                        <span>SKU: REF. LA-140</span>
+                                        <span>Categories: <a href="#">{{product.category}}</a>,</span>
+                                        <span>Tags: <a href="#">Blazer</a>, <a href="#">chair</a>, <a href="#">Coat</a>, <a href="#">dress</a>, <a href="#">light</a>, <a href="#">Living</a>, <a href="#">Main 01</a></span>
+                                    </div>
+                                    <div class="social-icon-style-3">
+                                        <a class="facebook" href="#"><i class="fa fa-facebook"></i></a>
+                                        <a class="twitter" href="#"><i class="fa fa-twitter"></i></a>
+                                        <a class="linkedin" href="#"><i class="fa fa-linkedin"></i></a>
+                                        <a class="pinterest" href="#"><i class="fa fa-pinterest-p"></i></a>
+                                        <a class="google-plus" href="#"><i class="fa fa-google-plus"></i></a>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="product-details-col-28">
+                                <div class="pro-details-sidebar-active slider-nav-style-3 owl-carousel">
+                                    <div class="single-pro-details-sidebar">
+                                        <a href="#"><img src="assets/images/product-details/pro-details-sidebar-1.jpg" alt=""></a>
+                                        <div class="pro-details-sidebar-content">
+                                            <h4><a href="#">NEW <br>LONDON</a></h4>
+                                            <p>Off 20% for all</p>
+                                        </div>
+                                    </div>
+                                    <div class="single-pro-details-sidebar">
+                                        <a href="#"><img src="assets/images/product-details/pro-details-sidebar-2.jpg" alt=""></a>
+                                        <div class="pro-details-sidebar-content">
+                                            <h4><a href="#">NEW <br>LONDON</a></h4>
+                                            <p>Off 20% for all</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="description-review-area section-padding-7 pb-100">
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-lg-12 col-md-12">
+                        <div class="description-review-wrapper">
+                            <div class="description-review-topbar nav">
+                                <a  data-bs-toggle="tab" href="#des-details3">Reviews ({{review_count}})</a>
+                               
+                            </div>
+                            <div class="tab-content description-review-bottom">
+                                <div id="des-details3" class="tab-pane ">
+                                    <div class="review-wrapper">
+                                        <h2>{{ product.ratings.count }} review for {{ product.product_name}}</h2>
+                                        {% for rating in ratings %}
+                                            {% if rating.review %}
+                                                <div class="single-review">
+                                                    <div class="review-img">
+                                                        <img src="assets/images/product-details/client-1.jpg" alt="">
+                                                    </div>
+                                                    <div class="review-content">
+                                                        <div class="review-top-wrap">
+                                                            <div class="review-name">
+                                                                <h5><span>{{ rating.user.first_name }} {{ rating.user.last_name }}</span> - {{ rating.created_at|date:'F j, Y' }}</h5>
+                                                            </div>
+                                                            <div class="product-details-ratting-wrap">
+                                                                <div class="product-details-ratting">
+                                                                    {% for i in 5|times %}
+                                                                        <i class="{% if i <= rating.rating %}yellow  {% endif %}fa fa-star"></i>
+                                                                    {% endfor %}
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <p>{{ rating.review }}</p>
+                                                    </div>
+                                                </div>
+                                            {% endif %}
+                                        {% empty %}
+                                            <p>No reviews yet.</p>
+                                        {% endfor %}
+                                    </div>
+                                    <div class="ratting-form-wrapper">
+                                        <span>Add a Review</span>
+                                        <p>Your email address will not be published. Required fields are marked <span>*</span></p>
+                                        <div class="ratting-form">
+                                            <form action="{% url "product:post_review" product.id %}" method='post'>
+                                                {% csrf_token %}
+                                                <div class="row">
+                                                    {% comment %} <div class="col-lg-3 col-md-6">
+                                                        <div class="rating-form-style mb-20">
+                                                            <label>Name <span>*</span></label>
+                                                            <input type="text">
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-lg-3 col-md-6">
+                                                        <div class="rating-form-style mb-20">
+                                                            <label>Email <span>*</span></label>
+                                                            <input type="email">
+                                                        </div>
+                                                    </div> {% endcomment %}
+                                                    <div class="col-lg-12">
+                                                        <div class="star-box-wrap">
+                                                            <!-- Five star icons for rating -->
+                                                            <div class="single-ratting-star" data-rating="1">
+                                                                <i class="fa fa-star"></i>
+                                                            </div>
+                                                            <div class="single-ratting-star" data-rating="2">
+                                                                <i class="fa fa-star"></i>
+                                                            </div>
+                                                            <div class="single-ratting-star" data-rating="3">
+                                                                <i class="fa fa-star"></i>
+                                                            </div>
+                                                            <div class="single-ratting-star" data-rating="4">
+                                                                <i class="fa fa-star"></i>
+                                                            </div>
+                                                            <div class="single-ratting-star" data-rating="5">
+                                                                <i class="fa fa-star"></i>
+                                                            </div>
+                                                            <!-- Hidden input to store the selected rating -->
+                                                            <input type="hidden" name="rating" id="rating-value">
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-12">
+                                                        <div class="rating-form-style mb-20">
+                                                            <label>Your review <span>*</span></label>
+                                                            <textarea name="review"></textarea>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-lg-12">
+                                                        <div class="form-submit">
+                                                            <input type="submit" value="Submit">
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="small-device-area d-block d-md-none">
+            <div class="container-fluid">
+                <div class="pro-dec-small-device">
+                    <div class="pro-details-sidebar-active slider-nav-style-3 owl-carousel">
+                        <div class="single-pro-details-sidebar">
+                            <a href="#"><img src="assets/images/product-details/pro-details-sidebar-1.jpg" alt=""></a>
+                            <div class="pro-details-sidebar-content">
+                                <h4><a href="#">NEW <br>LONDON</a></h4>
+                                <p>Off 20% for all</p>
+                            </div>
+                        </div>
+                        <div class="single-pro-details-sidebar">
+                            <a href="#"><img src="assets/images/product-details/pro-details-sidebar-2.jpg" alt=""></a>
+                            <div class="pro-details-sidebar-content">
+                                <h4><a href="#">NEW <br>LONDON</a></h4>
+                                <p>Off 20% for all</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="sidebar-subscribe-wrap">
+                        <div class="sidebar-subscribe-content text-center">
+                            <i class="dlicon ui-1_email-84"></i>
+                            <h5>Join Our Newsletter</h5>
+                            <p>Sale up to 20% off for your next purchase in this month!</p>
+                        </div>
+                        <div class="sidebar-subscribe-form">
+                            <form class="validate subscribe-form-style" novalidate="" target="_blank" name="mc-embedded-subscribe-form" method="post" action="https://devitems.us11.list-manage.com/subscribe/post?u=6bbb9b6f5827bd842d9640c82&amp;id=05d85f18ef">
+                                <div class="mc-form">
+                                    <input class="email" type="email" required="" placeholder=" email address…" name="EMAIL" value="">
+                                    <div class="mc-news" aria-hidden="true">
+                                        <input type="text" value="" tabindex="-1" name="b_6bbb9b6f5827bd842d9640c82_05d85f18ef">
+                                    </div>
+                                    <div class="clear">
+                                        <input class="button" type="submit" name="subscribe" value="Subscribe">
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="related-product-area section-padding-1 pb-95">
+            <div class="container-fluid">
+                <div class="section-title-6 mb-50">
+                    <h2>Related Products</h2>
+                </div>
+                <div class="related-product-active owl-carousel">
+                    {% for product in cat_products %}
+                    <div class="product-wrap">
+                        <div class="product-img default-overlay mb-25">
+                            <a href="product-details.html">
+                                <img class="default-img" src="{{ product.product_image.url}}" alt="">
+                                <img class="hover-img" src="{{ product.product_image2.url}}" alt="">
+                            </a>
+                            <div class="product-action product-action-position-1">
+                                {% comment %} <a data-bs-toggle="modal" data-bs-target="#exampleModal" href="#"><i class="fa fa-eye"></i><span>Quick Shop</span></a> {% endcomment %}
+                                <a title="Add to Wishlist" href="{% url "wishlist:add_to_wishlist" product.id %}"><i class="fa fa-heart"></i><span>Add to Wishlist</span></a>
+                                {% comment %} <a class="icon-blod" title="Add to Compare" href="{% url "cart:add_to_cart" product.id %}"><i class="dlicon arrows-4_compare"></i><span>Add to Compare</span></a> {% endcomment %}
+                                {% comment %} <a title="Add to Cart" href="{% url "cart:add_to_cart" product.id %}"><i class="fa fa-shopping-cart"></i><span>Add to Cart</span></a> {% endcomment %}
+                            </div>
+                        </div>
+                        <div class="product-content-2 title-font-width-400 text-center">
+                            <h3><a href="product-details.html">{{ product.product_name}}</a></h3>
+                            <div class="product-price">
+                                <span class="new-price">{{ product.discounted_price }}</span>
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                    
+                </div>
+            </div>
+        </div>
+        <script>
+            document.addEventListener("DOMContentLoaded", function() {
+                let selectedSize = null;
+                const sizeOptions = document.querySelectorAll(".size-option");
+                const addToCartBtn = document.getElementById("add-to-cart-btn");
+                const sizeInput = document.getElementById("selected-size");
+                const addToCartForm = document.getElementById("add-to-cart-form");
+        
+                sizeOptions.forEach(option => {
+                    option.addEventListener("click", function(event) {
+                        event.preventDefault();
+                        selectedSize = this.getAttribute("data-size");
+                        sizeOptions.forEach(opt => opt.classList.remove("selected-size"));
+                        this.classList.add("selected-size");
+                    });
+                });
+        
+                addToCartBtn.addEventListener("click", function(event) {
+                    event.preventDefault();
+                    if (selectedSize) {
+                        sizeInput.value = selectedSize;
+                        addToCartForm.submit();
+                    } else {
+                        alert("Please select a size before adding to cart.");
+                    }
+                });
+            });
+            document.addEventListener('DOMContentLoaded', function() {
+                const visibleQtyInput = document.getElementById('visible-qtybutton');
+                const hiddenQtyInput = document.getElementById('hidden-qtybutton');
+                const sizeOptions = document.querySelectorAll('.size-option');
+                const selectedSizeInput = document.getElementById('selected-size');
+                const addToCartBtn = document.getElementById('add-to-cart-btn');
+            
+                // Synchronize the hidden input value with the visible input value
+                visibleQtyInput.addEventListener('input', function() {
+                    hiddenQtyInput.value = visibleQtyInput.value;
+                });
+            
+                // Update the hidden size input when a size is selected
+                sizeOptions.forEach(function(option) {
+                    option.addEventListener('click', function(event) {
+                        event.preventDefault();
+                        const selectedSize = this.getAttribute('data-size');
+                        selectedSizeInput.value = selectedSize;
+            
+                        // Remove 'selected' class from all size options
+                        sizeOptions.forEach(function(opt) {
+                            opt.classList.remove('selected');
+                        });
+            
+                        // Add 'selected' class to the clicked size option
+                        this.classList.add('selected');
+                    });
+                });
+            
+                // Submit the form when the "Add to cart" button is clicked
+                addToCartBtn.addEventListener('click', function(event) {
+                    event.preventDefault();
+            
+                    // Ensure the hidden quantity input is updated before form submission
+                    hiddenQtyInput.value = visibleQtyInput.value;
+            
+                    // Submit the form
+                    document.getElementById('add-to-cart-form').submit();
+                });
+            });
+
+            document.addEventListener('DOMContentLoaded', function() {
+                const stars = document.querySelectorAll('.single-ratting-star');
+                const ratingInput = document.getElementById('rating-value');
+                
+                stars.forEach(star => {
+                    star.addEventListener('click', function() {
+                        const rating = this.getAttribute('data-rating');
+                        ratingInput.value = rating;
+            
+                        // Update star colors based on the selected rating
+                        stars.forEach(s => {
+                            if (s.getAttribute('data-rating') <= rating) {
+                                s.classList.add('selected');
+                            } else {
+                                s.classList.remove('selected');
+                            }
+                        });
+                    });
+            
+                    // Add hover effect to display the rating
+                    star.addEventListener('mouseover', function() {
+                        const rating = this.getAttribute('data-rating');
+                        stars.forEach(s => {
+                            if (s.getAttribute('data-rating') <= rating) {
+                                s.classList.add('hover');
+                            } else {
+                                s.classList.remove('hover');
+                            }
+                        });
+                    });
+            
+                    // Remove hover effect when not hovering
+                    star.addEventListener('mouseout', function() {
+                        stars.forEach(s => {
+                            s.classList.remove('hover');
+                        });
+                    });
+                });
+            });
+        </script>
+        {% endblock %}
+
+    

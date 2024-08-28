@@ -1,0 +1,108 @@
+{% extends 'admin_side/base.html' %}
+{% load static %}
+{% block content %}
+<style>
+    .alert {
+        padding: 15px;
+        margin-bottom: 20px;
+        border: 1px solid transparent;
+        border-radius: 4px;
+    }
+    
+    .alert-success {
+        color: #3c763d;
+        background-color: #dff0d8;
+        border-color: #d6e9c6;
+    }
+    
+    .alert-error, .alert-danger {
+        color: #a94442;
+        background-color: #f2dede;
+        border-color: #ebccd1;
+    }
+    
+    .alert-info {
+        color: #31708f;
+        background-color: #d9edf7;
+        border-color: #bce8f1;
+    }
+</style>
+    {% if messages %}
+        {% for message in messages %}
+        <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+        <strong>{{ message }}</strong>
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+        {% endfor %}
+    {% endif %}
+<section class="content-main">
+    <div class="content-header">
+        <div>
+            <h2 class="content-title card-title">Sales Report</h2>
+            <p>Filter and download sales reports.</p>
+        </div>
+    </div>
+    <div class="card mb-4">
+        <div class="card-body">
+            <form method="get" class="mb-4">
+                <div class="row">
+                    <div class="col-md-4">
+                        <label for="date_filter" class="form-label">Date Filter</label>
+                        {{ form.date_filter }}
+                    </div>
+                    <div class="col-md-4">
+                        <label for="start_date" class="form-label">Start Date</label>
+                        {{ form.start_date }}
+                    </div>
+                    <div class="col-md-4">
+                        <label for="end_date" class="form-label">End Date</label>
+                        {{ form.end_date }}
+                    </div>
+                </div>
+                <button type="submit" class="btn btn-primary mt-3">Generate Report</button>
+            </form>
+
+            <div class="mb-4">
+                <a href="{% url 'superuser:download_pdf_report' %}?{{ request.GET.urlencode }}" class="btn btn-outline-primary">Download PDF</a>
+                <a href="{% url 'superuser:download_excel_report' %}?{{ request.GET.urlencode }}" class="btn btn-outline-secondary">Download Excel</a>
+            </div>
+
+            <h2 class="content-title card-title">Report Summary</h2>
+            <p>Total Sales: {{ total_sales }}</p>
+            <p>Total Discount: {{ total_discount }}</p>
+            <p>Order Count: {{ order_count }}</p>
+
+            <article class="itemlist">
+                <div class="row align-items-center">
+                    <table class="table table-bordered">
+                        <thead>
+                            <tr>
+                                <th>Order ID</th>
+                                <th>User</th>
+                                <th>Total Price</th>
+                                <th>Payment Method</th>
+                                <th>Payment Status</th>
+                                {% comment %} <th>Coupon Code</th>
+                                <th>Discount Percentage</th> {% endcomment %}
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for order in orders %}
+                                <tr>
+                                    <td>{{ order.id }}</td>
+                                    <td>{{ order.user.first_name }} {{order.user.last_name}}</td>
+                                    <td>{{ order.total_amount }}</td>
+                                    <td>{{ order.payment_method }}</td>
+                                    <td>{{ order.payment_status }}</td>
+                                    {% comment %}<td>{{ order.coupon.code }}</td>
+                                    <td>{{ order.discount_percentage }}%</td> {% endcomment %}
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </article>
+        </div>
+    </div>
+</section>
+{% endblock %}

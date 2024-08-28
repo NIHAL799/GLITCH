@@ -1,0 +1,251 @@
+{% extends "user_side/base2.html" %}
+{% load static %}
+{% block content %}
+
+<style>
+    .coupon-list {
+        list-style-type: none;
+        padding: 0;
+      }
+    
+      .coupon-list li {
+        border: 1px solid #ddd;
+        padding: 10px;
+        margin-bottom: 10px;
+        cursor: pointer;
+      }
+    
+      .coupon-list li.selected {
+        background-color: #f1f1f1;
+        font-weight: bold;
+      }
+    
+      .coupon-list li p {
+        margin-bottom: 0;
+      }
+    .custom-button {
+        background-color: black;
+        color: white;
+        border: none;
+        padding: 10px 20px;
+        text-align: center;
+        display: inline-block;
+        font-size: 16px;
+        cursor: pointer;
+        border-radius: 0;
+    }
+
+    .custom-button:hover {
+        background-color: #333;
+    }
+
+    .address-card {
+        border: 1px solid #ddd;
+        padding: 10px;
+        margin-bottom: 10px;
+        cursor: pointer;
+        position: relative;
+    }
+
+    .address-card.selected {
+        background-color: orange;
+        color: white;
+    }
+
+    .payment-option {
+        padding: 10px;
+        border: 1px solid #ddd;
+        cursor: pointer;
+        margin-bottom: 10px;
+    }
+
+    .payment-option.selected {
+        background-color: skyblue;
+    }
+
+    .payment-option input[type="radio"],
+    .address-card input[type="radio"] {
+        display: none;
+    }
+</style>
+
+<div class="checkout-main-area pt-100 pb-100">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-7">
+                <div class="billing-info-wrap mr-100">
+                    <h3>Billing Details</h3>
+                    <form method="post" action="{% url 'order:checkout' %}" id="checkout-form">
+                        {% csrf_token %}
+                        <div class="billing-select mb-25">
+                            <label>Select Address</label>
+                            <div id="address-container">
+                                {% for address in user_addresses %}
+                                <div class="address-card" data-address-id="{{ address.id }}">
+                                    <input type="radio" id="address-{{ address.id }}" name="selected_address" value="{{ address.id }}" required>
+                                    <label for="address-{{ address.id }}">
+                                        <p>{{ address.first_name }} {{ address.last_name }}, {{ address.street_address }}, {{ address.city }}, {{ address.country }}</p>
+                                    </label>
+                                </div>
+                                {% endfor %}
+                            </div>
+                        </div>
+                        <a href="{% url 'order:add_address_checkout' %}" class="btn btn-primary mt-3">Add New Address</a>
+                        <div class="additional-info-wrap mt-4">
+                            <h3>Additional Information</h3>
+                            <label>Order Notes (optional)</label>
+                            <textarea placeholder="Notes about your order, e.g. special notes for delivery." name="order_notes"></textarea>
+                        </div>
+                        <div class="payment-options mt-4">
+                            <label>Select Payment Method</label>
+                            <div id="payment-container">
+                                <div class="payment-option" data-payment-method="cod">
+                                    <input type="radio" id="cod" name="payment_method" value="cod" required>
+                                    <label for="cod">Cash on Delivery (COD)</label>
+                                </div>
+                                <div class="payment-option" data-payment-method="wallet">
+                                    <input type="radio" id="wallet" name="payment_method" value="wallet" required>
+                                    <label for="wallet">Wallet</label>
+                                </div>
+                                <div class="payment-option" data-payment-method="razorpay">
+                                    <input type="radio" id="razorpay" name="payment_method" value="razorpay" required>
+                                    <label for="razorpay">Razorpay</label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="place-order mt-30">
+                            <button class="custom-button" type="submit" id="place-order-button">Place Order</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            <div class="col-lg-5">
+                <div class="your-order-area">
+                    <h3>Your Order</h3>
+                    <div class="your-order-wrap gray-bg-4">
+                        <div class="customer-zone mb-30">
+                            <p class="cart-page-title">Have a coupon? <a class="checkout-click" href="#" data-bs-toggle="modal" data-bs-target="#available-coupons-modal">Click here to see available coupons</a></p>
+                            <div class="checkout-login-info">
+                              <p>If you have a coupon code, please apply it below.</p>
+                              <form action="{% url 'order:apply_coupon' %}" method="post" id="coupon-form">
+                                {% csrf_token %}
+                                <input type="text" name="coupon_code" id="coupon-code" placeholder="Coupon code" value="" required>
+                                <button type="submit" class="btn btn-primary">Apply Coupon</button>
+                              </form>
+                            </div>
+                          </div>
+                        <div class="your-order-info-wrap">
+                            <div class="your-order-info">
+                                <ul>
+                                    <li>Product <span>Total</span></li>
+                                </ul>
+                            </div>
+                            <div class="your-order-middle">
+                                {% for item in cart_items %}
+                                <ul>
+                                    <li>{{ item.product.product_name }} <span>₹{{ item.product.discounted_price|floatformat:2 }} x {{ item.quantity }}</span></li>
+                                </ul>
+                                {% endfor %}
+                            </div>
+                            <div class="your-order-info order-subtotal">
+                                <ul>
+                                    <li>Subtotal <span>₹{{ subtoatal|floatformat:2 }}</span></li>
+                                </ul>
+                            </div>
+                            <div class="your-order-info order-shipping">
+                                <ul>
+                                    <li>Coupon Discount <span>₹{{ discount|floatformat:2 }}</span></li>
+                                </ul>
+                            </div>
+                            <div class="your-order-info order-subtotal">
+                                <ul>
+                                    <li>Shipping Charge <span>₹{{ delivery_charge }}</span></li>
+                                </ul>
+                            </div>
+                            <div class="your-order-info order-total">
+                                <ul>
+                                    <li>Total <span>₹{{ final_total|floatformat:2 }}</span></li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="payment-method"></div>
+                    </div>
+                    <div class="payment-info-order mt-30">
+                        <p>Your personal data will be used to process your order, support your experience throughout this website, and for other purposes described in our privacy policy.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="available-coupons-modal" tabindex="-1" aria-labelledby="available-coupons-modal-label" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="available-coupons-modal-label">Available Coupons</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          {% if available_coupons %}
+            <ul class="coupon-list">
+              {% for coupon in available_coupons %}
+                <li class="coupon-item" data-coupon-id="{{ coupon.id }}" data-coupon-code="{{ coupon.code }}">
+                  <p>
+                    <strong>{{ coupon.code }}</strong> - {{ coupon.description }} ({{ coupon.offer_percentage }}% off)
+                  </p>
+                  <p>
+                    Valid from: {{ coupon.start_date|date:"Y-m-d" }} to {{ coupon.expiry_date|date:"Y-m-d" }}<br>
+                    Minimum order amount: ₹{{ coupon.minimum_order_amount }}<br>
+                    Maximum order amount: ₹{{ coupon.maximum_order_amount }}
+                  </p>
+                </li>
+              {% endfor %}
+            </ul>
+          {% else %}
+            <p>No coupons available at the moment.</p>
+          {% endif %}
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const couponItems = document.querySelectorAll('.coupon-item');
+        const couponCodeInput = document.querySelector('#coupon-code');
+        const couponForm = document.querySelector('#coupon-form');
+    
+        couponItems.forEach(item => {
+          item.addEventListener('click', function () {
+            couponItems.forEach(i => i.classList.remove('selected'));
+            this.classList.add('selected');
+            couponCodeInput.value = this.dataset.couponCode;
+            couponForm.submit();
+          });
+        });
+      });
+    document.addEventListener('DOMContentLoaded', function () {
+        const addressCards = document.querySelectorAll('.address-card');
+        const paymentOptions = document.querySelectorAll('.payment-option');
+        
+        addressCards.forEach(card => {
+            card.addEventListener('click', function () {
+                addressCards.forEach(c => c.classList.remove('selected'));
+                card.classList.add('selected');
+                card.querySelector('input[type="radio"]').checked = true;
+            });
+        });
+
+        paymentOptions.forEach(option => {
+            option.addEventListener('click', function () {
+                paymentOptions.forEach(p => p.classList.remove('selected'));
+                option.classList.add('selected');
+                option.querySelector('input[type="radio"]').checked = true;
+            });
+        });
+    });
+</script>
+
+{% endblock %}

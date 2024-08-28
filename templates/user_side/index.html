@@ -1,0 +1,493 @@
+{% extends "user_side/base.html" %}
+{% load static %}
+{% block content %}
+
+<body>
+    {% comment %} <div class="header-top">
+        <div class="container-fluid">
+            <div class="row align-items-center">
+                <div class="col-lg-6">
+                    <div class="header-login-reg">
+                        {% if user.is_authenticated %}
+                        <a class="active" href="{% url "user:signout" %}">Logout</a>
+                        {% else %}
+                        <a class="active" href="{% url "user:user_login" %}">Login</a>
+                        <a href="{% url "user:user_signup" %}">Register</a>
+                        {% endif %}
+                    </div>
+                </div>
+                <div class="col-lg-6">
+                    <div class="header-right-wrap header-right-flex">
+                        <div class="currency-wrap same-style-2">
+                            <div class="same-style2-left">
+                                <span>Currency : </span>
+                            </div>
+                            <div class="same-style2-right">
+                                <ul>
+                                    <li><a href="#">USD <i class="fa fa-angle-down"></i></a>
+                                        <ul>
+                                            <li><a href="#">INR</a></li>
+                                            <li><a href="#">USD</a></li>
+                                            <li><a href="#">AED</a></li>
+                                        </ul>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="language-wrap same-style-2">
+                            <div class="same-style2-left">
+                                <span>Language : </span>
+                            </div>
+                            <div class="same-style2-right">
+                                <ul>
+                                    <li><a href="#">English <i class="fa fa-angle-down"></i></a>
+                                        <ul>
+                                            <li><a href="#">English</a></li>
+                                            <li><a href="#">France</a></li>
+                                            <li><a href="#">Germany</a></li>
+                                        </ul>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="store-wrap same-style-2">
+                            <div class="same-style2-left">
+                                <span><a href="#"><i class="dlicon location_radar"></i>Find store</a></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div> {% endcomment %}
+        <div class="slider-area mt-80">
+            <div class="container-fluid p-0">
+                <div class="main-slider-active owl-carousel slider-dot-position-2 slider-dot-style-1 slider-dot-hm2 slider-img-width">
+                    <div class="single-main-slider bg-light-pink-2 slider-animated-1 slider-height-hm2 custom-d-flex align-items-end" data-dot="01">
+                        <div class="slider-bg-text-2-1">
+                            <h1 class="animated">SS </h1>
+                        </div>
+                        <div class="slider-bg-text-2-2">
+                            <h1 class="animated">DRESS</h1>
+                        </div>
+                        <div class="row g-0 width-100-percent flex-row-reverse">
+                            <div class="custom-col-slider-hm2-42">
+                                <div class="main-slider-img slider-hm2-img-animation">
+                                    <img class="animated" src="{% static 'assets/images/slider/slider-hm2-1.png'%}" alt="">
+                                </div>
+                            </div>
+                            <div class="custom-col-slider-hm2-58 align-self-center">
+                                <div class="main-slider-content-2-1 text-center slider-content-mrg-l-2">
+                                    <span class="animated">NEW COLLECTIONS 2023</span>
+                                    <h1 class="animated">SHIRT DRESS </h1>
+                                    <h5 class="animated">$89.99 </h5>
+                                    <div class="slider-btn-2">
+                                        <a class="animated" href="product-details.html">shop now </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="single-main-slider bg-lightslategray-2 pt-60 slider-animated-1 slider-height-hm2 custom-d-flex align-items-end" data-dot="02">
+                        <div class="slider-bg-text-2-3">
+                            <h1 class="animated">WINDOWPANE </h1>
+                        </div>
+                        <div class="slider-bg-text-2-4">
+                            <h1 class="animated"> SUIT BLAZE </h1>
+                        </div>
+                        <div class="row g-0 align-items-center width-100-percent flex-row-reverse">
+                            <div class="custom-col-slider-hm2-56">
+                                <div class="main-slider-content-2-1 text-center slider-content-ntvmrg-1">
+                                    <span class="animated">NEW COLLECTIONS 2023</span>
+                                    <h1 class="animated slider-content-2-font-dec">WINDOWPANE <br> CHECK SUIT BLAZER </h1>
+                                    <h5 class="animated">$89.99 </h5>
+                                    <div class="slider-btn-2">
+                                        <a class="animated" href="product-details.html">shop now </a>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="custom-col-slider-hm2-44">
+                                <div class="main-slider-img slider-img-mrg-l-1 slider-hm2-img-animation">
+                                    <img class="animated" src="{% static 'assets/images/slider/slider-hm2-2.png'%}" alt="">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="single-main-slider bg-gray-3 slider-animated-1 slider-height-hm2 custom-d-flex align-items-center" data-dot="03">
+                        <div class="slider-bg-text-2-5">
+                            <h1 class="animated">BLACK <br>CKPACK </h1>
+                        </div>
+                        <div class="row g-0  width-100-percent align-items-center">
+                            <div class="custom-col-slider-hm2-47">
+                                <div class="main-slider-img slider-img-mrg-l-2 slider-hm2-img-animation">
+                                    <img class="animated" src="{% static 'assets/images/slider/slider-hm2-3.png'%}" alt="">
+                                </div>
+                            </div>
+                            <div class="custom-col-slider-hm2-53">
+                                <div class="main-slider-content-2-1 text-center slider-content-ntvmrg-2">
+                                    <span class="animated">NEW COLLECTIONS 2023</span>
+                                    <h1 class="animated slider-content-2-font-dec">BLACK BACKPACK </h1>
+                                    <h5 class="animated">$89.99 </h5>
+                                    <div class="slider-btn-2">
+                                        <a class="animated" href="product-details.html">shop now </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="slider-social">
+                <ul>
+                    <li><a href="#">DRIBBLE</a></li>
+                    <li><a href="#">Facebook</a></li>
+                    <li><a href="#">TWITTER</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="categories-area pt-130 pb-120 section-padding-1">
+            <div class="container-fluid">
+                <div class="section-title-2 mb-70 text-center">
+                    <h2>popular categories</h2>
+                    <p>Vestibulum felis odio, imperdiet eget sollicitudin sed, laoreet maximus diam. Integer nec egestas augue</p>
+                </div>
+                <div class="categories-slider-active dot-style-2 owl-carousel">
+                    {% for cat in categories %}
+
+                    <div class="single-categories default-overlay">
+                        <div class="img-zoom">
+                            <a href="{% url 'category:shop_by_category' cat.category_name %}"><img src="{{cat.cat_image.url}}" alt="categories"></a>
+                        </div>
+                        <div class="categories-content categorie-posution-1">
+                            <span>#woman</span>
+                            <h3><a href="{% url 'category:shop_by_category' cat.category_name %}"> <br>{{cat.category_name }}</a></h3>
+                            <div class="categories-btn">
+                                <a href="{% url 'category:shop_by_category' cat.category_name %}">Shop now</a>
+                            </div>
+                        </div>
+                    </div>
+
+                    {% endfor %}
+                    {% comment %} <div class="single-categories default-overlay">
+                        <div class="img-zoom">
+                            <a href="#"><img src="{{cat.cat_image.url}}" alt="categories"></a>
+                        </div>
+                        <div class="categories-content categorie-posution-2">
+                            <span>#kids</span>
+                            <h3><a href="#">SHIMMERY SWEATER</a></h3>
+                            <div class="categories-btn">
+                                <a href="product-details.html">Shop now</a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="single-categories default-overlay res-white-overly-xs">
+                        <div class="img-zoom">
+                            <a href="#"><img src="{% static 'assets/images/categories/categories-3.jpg'%}" alt="categories"></a>
+                        </div>
+                        <div class="categories-content categorie-posution-3 categories-content-black">
+                            <span>#manjacket</span>
+                            <h3><a href="#">BIKER JACKET WITH <br>PADDED SHOULDER</a></h3>
+                            <div class="categories-btn categories-btn-black">
+                                <a href="product-details.html">Shop now</a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="single-categories default-overlay">
+                        <div class="img-zoom">
+                            <a href="#"><img src="{% static 'assets/images/categories/categories-2.jpg'%}" alt="categories"></a>
+                        </div>
+                        <div class="categories-content categorie-posution-2">
+                            <span>#kids</span>
+                            <h3><a href="#">SHIMMERY SWEATER</a></h3>
+                            <div class="categories-btn">
+                                <a href="product-details.html">Shop now</a>
+                            </div>
+                        </div>
+                    </div> {% endcomment %}
+                </div>
+            </div>
+        </div>
+        <div class="product-area section-padding-1 pb-125">
+            <div class="container-fluid">
+                <div class="section-title-2 mb-70 text-center">
+                    <h2>Must have</h2>
+                </div>
+                <div class="row">
+
+                    {% for product in products %}
+                    <div class="col-xl-3 col-lg-4 col-md-6 col-sm-6">
+                        <div class="product-wrap mb-60">
+                            <div class="product-img default-overlay mb-25">
+                                <a href="{% url 'product:product_details' product.id %}">
+                                   
+                                    <img src="{{product.product_image.url}}" class="default-img" alt="Item">
+                                    
+                                    {% comment %} <img class="default-img" src="{% static 'assets/images/product/product-5.jpg'%}" alt="">
+                                    <img class="hover-img" src="{% static 'assets/images/product/product-5-2.jpg'%}" alt=""> {% endcomment %}
+                                    {% if product.category.is_offer_available %}
+                                        <span class="badge-black badge-left-20 badge-top-20 badge-width-height-2 badge-border-radius-100">sale!</span>
+                                    {% endif %}
+                                </a>
+                                <div class="product-action product-action-position-2 action-inc-width-height">
+                                    {% comment %} <a data-bs-toggle="modal" data-bs-target="#exampleModal" href="#"><i class="fa fa-eye"></i><span>Quick Shop</span></a> {% endcomment %}
+                                    <a title="Add to Wishlist" href="{% url "wishlist:add_to_wishlist" product.id %}"><i class="fa fa-heart"></i><span>Add to Wishlist</span></a>
+                                    {% comment %} <a class="icon-blod" title="Add to Compare" href="#"><i class="dlicon arrows-4_compare"></i><span>Add to Compare</span></a> {% endcomment %}
+                                    {% comment %} <a title="Add to Cart" href="#"><i class="fa fa-shopping-cart"></i><span>Add to Cart</span></a> {% endcomment %}
+                                </div>
+                            </div>
+                            <div class="product-content-2 title-font-width-400 text-center">
+                                <h3><a href="product-details.html">{{product.product_name}}</a></h3>
+                                <div class="product-price">
+                                    {% if product.category.is_offer_available %}
+                                        <span class="old-price"><del>₹{{ product.price|floatformat:2 }}</del></span>
+                                        <span class="new-price">₹{{ product.discounted_price|floatformat:2 }}</span>
+                                        <span class="discount-percentage">Save {{ product.category.discount_percentage }}%!</span>
+                                    {% else %}
+                                        <span class="new-price">₹{{ product.price|floatformat:2 }}</span>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+
+                </div>
+                <div class="btn-style-1 text-center">
+                    <a class="btn-border" href="{% url "product:all_products" %}">
+                        <div class="btn-viewmore-normal btn-ptb-1 btn-viewmore-bg-transparent btn-viewmore-common">
+                            <span>View all products</span>
+                        </div>
+                        <div class="btn-viewmore-hover btn-ptb-1 btn-viewmore-common btn-hover-transition">
+                            <span>View all products</span>
+                        </div>
+                    </a>
+                </div>
+            </div>
+        </div>
+        <div class="delay-area bg-light-pink pt-190 pb-190 res-white-overly-xs">
+            <div class="bg-1 jarallaxa"></div>
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-lg-7">
+                        <div class="delay-content delay-content-mrg-2 text-center">
+                            <span>limit edition shimmiry skitrt</span>
+                            <h2>off 30%</h2>
+                            <div class="timer timer-style-1 mb-50">
+                                <div data-countdown="2024/12/01"></div>
+                            </div>
+                            <div class="btn-style-1 text-center">
+                                <a class="btn-border" href="product-details.html">
+                                    <div class="btn-viewmore-normal btn-ptb-2 btn-viewmore-bg-black btn-viewmore-common btn-font-2">
+                                        <span>SHOP NOW</span>
+                                    </div>
+                                    <div class="btn-viewmore-hover btn-ptb-2 btn-viewmore-common btn-font-2">
+                                        <span>SHOP NOW</span>
+                                    </div>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="deal-wrap">
+                <span>Hot Deal This Week</span>
+            </div>
+        </div>
+        <div class="product-area section-padding-1 pt-125 pb-125">
+            <div class="container-fluid">
+                <div class="section-title-2 mb-70 text-center">
+                    <h2>sale this week</h2>
+                </div>
+                <div class="product-slider-active-2 owl-carousel dot-style-2">
+                    {% for product in offer_products %}
+                    <div class="product-wrap">
+                        <div class="product-img default-overlay mb-25">
+                            <a href="{% url "product:product_details" product.id %}">
+                                <img class="default-img" src="{{product.product_image.url}}" alt="">
+                                <img class="hover-img" src="{{product.product_image2.url}}" alt="">
+                                <span class="badge-black badge-right-20 badge-top-20 badge-width-height-2 badge-border-radius-100">-{{product.category.discount_percentage}}%</span>
+                            </a>
+                            <div class="product-action product-action-position-2 action-inc-width-height">
+                                <a title="Add to Wishlist" href="{% url "wishlist:add_to_wishlist" product.id %}"><i class="fa fa-heart"></i><span>Add to Wishlist</span></a>
+                            </div>
+                        </div>
+                        <div class="product-content-2 title-font-width-400 text-center">
+                            <h3><a href="product-details.html">{{product.product_name}}</a></h3>
+                            <div class="product-price">
+                                <span class="old-price">{{product.price}}</span>
+                                <span class="new-price">{{product.discounted_price}}</span>
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                    {% comment %} <div class="product-wrap">
+                        <div class="product-img default-overlay mb-25">
+                            <a href="product-details.html">
+                                <img class="default-img" src="{% static 'assets/images/product/product-7.jpg'%}" alt="">
+                                <img class="hover-img" src="{% static 'assets/images/product/product-7-2.jpg'%}" alt="">
+                            </a>
+                            <div class="product-action product-action-position-2 action-inc-width-height">
+                                <a data-bs-toggle="modal" data-bs-target="#exampleModal" href="#"><i class="fa fa-eye"></i><span>Quick Shop</span></a>
+                                <a title="Add to Wishlist" href="#"><i class="fa fa-heart"></i><span>Add to Wishlist</span></a>
+                                <a class="icon-blod" title="Add to Compare" href="#"><i class="dlicon arrows-4_compare"></i><span>Add to Compare</span></a>
+                                <a title="Add to Cart" href="#"><i class="fa fa-shopping-cart"></i><span>Add to Cart</span></a>
+                            </div>
+                        </div>
+                        <div class="product-content-2 title-font-width-400 text-center">
+                            <h3><a href="product-details.html">Quilted parka with hood</a></h3>
+                            <div class="product-price">
+                                <span class="old-price">$80.00</span>
+                                <span class="new-price">$55.00</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="product-wrap">
+                        <div class="product-img default-overlay mb-25">
+                            <a href="product-details.html">
+                                <img class="default-img" src="{% static 'assets/images/product/product-1.jpg'%}" alt="">
+                                <img class="hover-img" src="{% static 'assets/images/product/product-1-2.jpg'%}" alt="">
+                            </a>
+                            <div class="product-action product-action-position-2 action-inc-width-height">
+                                <a data-bs-toggle="modal" data-bs-target="#exampleModal" href="#"><i class="fa fa-eye"></i><span>Quick Shop</span></a>
+                                <a title="Add to Wishlist" href="#"><i class="fa fa-heart"></i><span>Add to Wishlist</span></a>
+                                <a class="icon-blod" title="Add to Compare" href="#"><i class="dlicon arrows-4_compare"></i><span>Add to Compare</span></a>
+                                <a title="Add to Cart" href="#"><i class="fa fa-shopping-cart"></i><span>Add to Cart</span></a>
+                            </div>
+                        </div>
+                        <div class="product-content-2 title-font-width-400 text-center">
+                            <h3><a href="product-details.html">Contrast faux fur jacket</a></h3>
+                            <div class="product-price">
+                                <span class="new-price">$50.00</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="product-wrap">
+                        <div class="product-img default-overlay mb-25">
+                            <a href="product-details.html">
+                                <img class="default-img" src="{% static 'assets/images/product/product-16.jpg'%}" alt="">
+                                <img class="hover-img" src="{% static 'assets/images/product/product-16-2.jpg'%}" alt="">
+                            </a>
+                            <div class="product-action product-action-position-2 action-inc-width-height">
+                                <a data-bs-toggle="modal" data-bs-target="#exampleModal" href="#"><i class="fa fa-eye"></i><span>Quick Shop</span></a>
+                                <a title="Add to Wishlist" href="#"><i class="fa fa-heart"></i><span>Add to Wishlist</span></a>
+                                <a class="icon-blod" title="Add to Compare" href="#"><i class="dlicon arrows-4_compare"></i><span>Add to Compare</span></a>
+                                <a title="Add to Cart" href="#"><i class="fa fa-shopping-cart"></i><span>Add to Cart</span></a>
+                            </div>
+                        </div>
+                        <div class="product-content-2 title-font-width-400 text-center">
+                            <h3><a href="product-details.html">Bejewelled velvet sandals</a></h3>
+                            <div class="product-price">
+                                <span class="new-price">$35.00</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="product-wrap">
+                        <div class="product-img default-overlay mb-25">
+                            <a href="product-details.html">
+                                <img class="default-img" src="{% static 'assets/images/product/product-14.jpg'%}" alt="">
+                                <img class="hover-img" src="{% static 'assets/images/product/product-14-2.jpg'%}" alt="">
+                                <span class="badge-black badge-right-0 badge-top-0 badge-width-height-1">sold uot</span>
+                            </a>
+                            <div class="product-action product-action-position-2 action-inc-width-height">
+                                <a data-bs-toggle="modal" data-bs-target="#exampleModal" href="#"><i class="fa fa-eye"></i><span>Quick Shop</span></a>
+                                <a title="Add to Wishlist" href="#"><i class="fa fa-heart"></i><span>Add to Wishlist</span></a>
+                                <a class="icon-blod" title="Add to Compare" href="#"><i class="dlicon arrows-4_compare"></i><span>Add to Compare</span></a>
+                                <a title="Add to Cart" href="#"><i class="fa fa-shopping-cart"></i><span>Add to Cart</span></a>
+                            </div>
+                        </div>
+                        <div class="product-content-2 title-font-width-400 text-center">
+                            <h3><a href="product-details.html">Strappy sandals</a></h3>
+                            <div class="product-price">
+                                <span class="old-price">$90.00</span>
+                                <span class="new-price">$70.00</span>
+                            </div>
+                        </div>
+                    </div> {% endcomment %}
+                </div>
+            </div>
+        </div>
+        <div class="service-area bg-light-pink pt-60 pb-25">
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-lg-3 col-md-6 col-sm-6">
+                        <div class="service-wrap mb-30 text-center">
+                            <div class="service-icon">
+                                <i class="dlicon shopping_delivery"></i>
+                            </div>
+                            <div class="service-content">
+                                <h4>Freeship Wordwide</h4>
+                                <p>In ac hendrerit turpis. Aliquam ultrices dolor dolor, at commodo diam feugiat</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-3 col-md-6 col-sm-6">
+                        <div class="service-wrap mb-30 text-center">
+                            <div class="service-icon">
+                                <i class="dlicon shopping_gift"></i>
+                            </div>
+                            <div class="service-content">
+                                <h4>Special Offers</h4>
+                                <p>In ac hendrerit turpis. Aliquam ultrices dolor dolor, at commodo diam feugiat</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-3 col-md-6 col-sm-6">
+                        <div class="service-wrap mb-30 text-center">
+                            <div class="service-icon">
+                                <i class="dlicon tech-2_l-security"></i>
+                            </div>
+                            <div class="service-content">
+                                <h4>Order Protection</h4>
+                                <p>In ac hendrerit turpis. Aliquam ultrices dolor dolor, at commodo diam feugiat</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-3 col-md-6 col-sm-6">
+                        <div class="service-wrap mb-30 text-center">
+                            <div class="service-icon">
+                                <i class="dlicon tech-2_headset"></i>
+                            </div>
+                            <div class="service-content">
+                                <h4>Professional Support</h4>
+                                <p>In ac hendrerit turpis. Aliquam ultrices dolor dolor, at commodo diam feugiat</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="subscribe-area pt-125 pb-130">
+            <div class="container">
+                <div class="row">
+                    <div class="col-lg-9 ms-auto me-auto">
+                        <div class="section-title-2 mb-60 text-center">
+                            <h2>JOIN OUR NEWSLETTER</h2>
+                            <p>Sale up to 20% off for your next purchase in this month!</p>
+                        </div>
+                        <div id="mc_embed_signup" class="subscribe-form subscribe-form-dec subscribe-mrg">
+                            <form id="mc-embedded-subscribe-form" class="validate subscribe-form-style" novalidate="" target="_blank" name="mc-embedded-subscribe-form" method="post" action="https://devitems.us11.list-manage.com/subscribe/post?u=6bbb9b6f5827bd842d9640c82&amp;id=05d85f18ef">
+                                <div id="mc_embed_signup_scroll" class="mc-form">
+                                    <input class="email" type="email" required="" placeholder="Your email address…" name="EMAIL" value="">
+                                    <div class="mc-news" aria-hidden="true">
+                                        <input type="text" value="" tabindex="-1" name="b_6bbb9b6f5827bd842d9640c82_05d85f18ef">
+                                    </div>
+                                    <div class="clear">
+                                        <input id="mc-embedded-subscribe" class="button" type="submit" name="subscribe" value="Subscribe">
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="support-lists">
+            <ul>
+                <li><a href="#"><i class="dlicon ui-3_chat-46"></i></a></li>
+                <li><a href="#"><i class=" dlicon ui-3_phone"></i></a></li>
+                <li><a href="#"><i class="dlicon ui-1_email-85"></i></a></li>
+            </ul>
+        </div>
+        
+{% endblock %}

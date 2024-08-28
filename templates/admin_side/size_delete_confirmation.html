@@ -1,0 +1,28 @@
+{% extends 'admin_side/base.html' %}
+{% load static %}
+{% block content %}
+<section class="content-main">
+    <div class="row">
+        <div class="col-6">
+            <div class="content-header">
+                <h2 class="content-title">Confirm Delete</h2>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-lg-6">
+            <div class="card mb-4">
+                <div class="card-body">
+                    <p>Are you sure you want to delete the size "{{ size.size }}" with stock "{{ size.stock }}"?</p>
+                    <form method="POST">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-md rounded font-sm hover-up btn-danger">Confirm Delete</button>
+                        <a href="{% url 'product:manage_sizes' product.id %}" class="btn btn-md rounded font-sm hover-up btn-secondary">Cancel</a>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock content %}

@@ -1,0 +1,137 @@
+{% extends 'admin_side/base.html' %}
+{% load static %}
+{% block content %}
+{% for message in messages %}
+<div class="alert alert-{{message.tags}} alert-dismissible fade show" role="alert">
+  <strong></strong>{{message}}
+  <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+</div>
+{% endfor %}
+<style>
+    .content {
+        position: relative;
+        z-index: 5;
+    }
+    
+    .footer {
+        position: relative;
+        bottom: 0;
+        width: 100%;
+        height: 100px; /* Adjust to the actual height of your footer */
+        z-index: 1;
+    }
+    
+    .hidden-row {
+        display: none;
+    }
+    
+    .table-container {
+        height: auto; /* Ensure container height is flexible */
+        overflow: visible; /* Ensure content is not clipped */
+        padding-bottom: 100px; /* Ensure the last row is not cut off by the footer */
+    }
+    
+    .table {
+        position: relative; /* Ensure the table is positioned correctly */
+    }
+</style>
+
+<!-- Modal -->
+<div class="modal fade" id="exampleModalLong" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLongTitle">Update Order Status</h5>
+                <button type="button" onclick="hideModal()" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <form method="post" action="{% url 'order:update_order_status' %}">
+                {% csrf_token %}
+                <div class="modal-body">
+                    <span class="h5">Update status of the Order</span><br>
+                    <label for="OrderID"></label>
+                    <input type="number" id="OrderID" name="OrderID" hidden="hidden">
+                    <label for="status"></label>
+                    <select id="status" name="status" class="form-select">
+                        <option value="Confirmed">Confirmed</option>
+                        <option value="Shipped">Shipped</option>
+                        <option value="Delivered">Delivered</option>
+                        <option value="Cancelled">Cancelled</option>
+                        <option value="Returned">Returned</option>
+                    </select>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" onclick="hideModal()" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-primary">Save changes</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<!-- MODAL -->
+
+<div class="card mb-4">
+    <header class="card-header">
+        <h4 class="card-title">Latest orders</h4>
+        <div class="row align-items-center">
+            <div class="col-md-3 col-12 me-auto mb-md-0 mb-3">
+                <form method="get" action="{% url 'order:order_list_admin' %}" class="d-flex">
+                    <input type="text" name="search" value="{{ request.GET.search }}" class="form-control me-2" placeholder="Search orders">
+                    <button type="submit" class="btn btn-primary">Search</button>
+                </form>
+            </div>
+        </div>
+    </header>
+    <div class="card-body">
+        <div class="table-responsive table-container">
+            <table class="table align-middle table-nowrap mb-0">
+                <thead class="table-light">
+                    <tr>
+                        <th scope="col" class="text-center">
+                            <div class="form-check align-middle">
+                                <input class="form-check-input" type="checkbox" id="transactionCheck01">
+                                <label class="form-check-label" for="transactionCheck01"></label>
+                            </div>
+                        </th>
+                        <th class="align-middle" scope="col">Order ID</th>
+                        <th class="align-middle" scope="col">Billing Name</th>
+                        <th class="align-middle" scope="col">Date</th>
+                        <th class="align-middle" scope="col">Payment Method</th>
+                        <th class="align-middle" scope="col">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for order in orders %}
+                    <tr>
+                        <td class="text-center">
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="transactionCheck02">
+                                <label class="form-check-label" for="transactionCheck02"></label>
+                            </div>
+                        </td>
+                        <td><a href="#" class="fw-bold">{{ order.id }}</a></td>
+                        <td>{{ order.address.first_name }} {{ order.address.last_name }}</td>
+                        <td>{{ order.created_at }}</td>
+                        <td>
+                            <i class="material-icons md-payment font-xxl text-muted mr-5"></i> {{ order.payment_method }}
+                        </td>
+                        <td><a href="{% url 'order:order_detail_admin' order.id %}" class="fw-bold">View</a></td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div> 
+    </div>
+</div>
+
+<script>
+    function showModal(id) {
+        $('#OrderID').attr('value', id)
+        $('#exampleModalLong').modal('show')
+    }
+    function hideModal() {
+        $('#exampleModalLong').modal('hide')
+    }
+</script>
+{% endblock %}

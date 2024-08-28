@@ -1,0 +1,21 @@
+{% extends "user_side/base2.html" %}
+{% load static %}
+
+<title>
+    {% block title %}
+    Cart G L I T C H
+    {% endblock title %}
+    
+    </title>
+{% block content %}
+<body>
+    <div class="container">
+        <h2>Add Address</h2>
+        <form method="post">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <button type="submit" class="btn btn-primary">Save Address</button>
+        </form>
+    </div>
+</body>
+{% endblock content %}

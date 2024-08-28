@@ -1,0 +1,498 @@
+<!doctype html>
+<html class="no-js" lang="en">
+
+
+<!-- Mirrored from template.hasthemes.com/toro/toro/product-details-2.html by HTTrack Website Copier/3.x [XR&CO'2014], Fri, 09 Feb 2024 11:19:52 GMT -->
+<head>
+    {% load static %}
+    <meta charset="utf-8">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <title>Toro - Minimal eCommerce HTML Template</title>
+    <meta name="robots" content="noindex, follow" />
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <!-- Favicon -->
+    <link rel="shortcut icon" type="image/x-icon" href="{% static 'assets/images/favicon.png'%}">
+
+    <!-- All CSS is here
+	============================================ -->
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="{% static 'assets/css/vendor/bootstrap.min.css'%}">
+    <!-- Icon Font CSS -->
+    <link rel="stylesheet" href="{% static 'assets/css/vendor/font-awesome.css'%}">
+    <link rel="stylesheet" href="{% static 'assets/css/vendor/dlicon.css'%}">
+    <!-- Others CSS -->
+    <link rel="stylesheet" href="{% static 'assets/css/plugins/owl-carousel.css'%}">
+    <link rel="stylesheet" href="{% static 'assets/css/plugins/slick.css'%}">
+    <link rel="stylesheet" href="{% static 'assets/css/plugins/magnific-popup.css'%}">
+    <link rel="stylesheet" href="{% static 'assets/css/plugins/jarallax.css'%}">
+    <link rel="stylesheet" href="{% static 'assets/css/plugins/easyzoom.css'%}">
+    <link rel="stylesheet" href="{% static 'assets/css/plugins/animate.css'%}">
+    <link rel="stylesheet" href="{% static 'assets/css/plugins/fullpage.css'%}">
+    <link rel="stylesheet" href="{% static 'assets/css/plugins/jquery-ui.css'%}">
+    <link rel="stylesheet" href="{% static 'assets/css/plugins/select2.min.css'%}">
+    <link rel="stylesheet" href="{% static 'assets/css/style.css'%}">
+
+</head>
+<style>
+    .alert {
+        padding: 15px;
+        margin-bottom: 20px;
+        border: 1px solid transparent;
+        border-radius: 4px;
+    }
+    
+    .alert-success {
+        color: #3c763d;
+        background-color: #dff0d8;
+        border-color: #d6e9c6;
+    }
+    
+    .alert-error, .alert-danger {
+        color: #a94442;
+        background-color: #f2dede;
+        border-color: #ebccd1;
+    }
+    
+    .alert-info {
+        color: #31708f;
+        background-color: #d9edf7;
+        border-color: #bce8f1;
+    }
+</style>
+<body>
+    {% if messages %}
+        {% for message in messages %}
+        <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+        <strong></strong>{{ message }}
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+        {% endfor %}
+    {% endif %}
+    <div class="main-wrapper">
+        <header class="header-area section-padding-1">
+            <div class="container-fluid">
+                <div class="row align-items-center">
+                    <div class="col-xl-2 col-lg-2">
+                        <div class="logo logo-width">
+                            <a href="index.html">
+                                <img src="assets/images/logo/logo.png" alt="logo">
+                            </a>
+                        </div>
+                    </div>
+                    <div class="col-xl-8 col-lg-8 d-flex justify-content-center position-static">
+                        <div class="main-menu menu-lh-1 main-menu-padding-1">
+                            <nav>
+                                <ul>
+                                    <li class="position-static"><a class="active" href="{% url "user:home" %}">Home <i class="fa fa-angle-down"></i></a>
+                                        
+                                    </li>
+                                    <li><a href="#">Pages <i class="fa fa-angle-down"></i></a>
+                                        <ul class="sub-menu-width">
+                                            <li><a href="about-us.html">About Us</a></li>
+                                            <li><a href="contact-us.html">Contact Page</a></li>
+                                            <li><a href="404.html">404 Page</a></li>
+                                            <li><a href="comming-soon.html">Comming Soon 01</a></li>
+                                            <li><a href="comming-soon-2.html">Comming Soon 02</a></li>
+                                            <li><a href="faq.html">FAQ</a></li>
+                                        </ul>
+                                    </li>
+                                    <li><a href="{% url "product:all_products" %}">Shop <i class="fa fa-angle-down"></i></a>
+                                        <ul class="mega-menu-style-2 mega-menu-width2 menu-negative-mrg1">
+                                            <li class="mega-menu-sub-width20"><a class="menu-title" href="#">Shop Layout</a>
+                                                <ul>
+                                                    <li><a href="{% url "product:all_products" %}">Shop All</a></li>
+                                                    {% for cat in categories  %}
+                                                        <li><a href="{% url "category:shop_by_category" cat.category_name %}">{{cat.category_name}}</a></li>
+                                                    {% endfor %}
+                                                </ul>
+                                            </li>
+                                            <li class="mega-menu-sub-width22"><a class="menu-title" href="#">Product Layout</a>
+                                                <ul>
+                                                    <li><a href="product-details.html">Single 01</a></li>
+                                                    <li><a href="product-details-2.html">Single 02</a></li>
+                                                    <li><a href="product-details-group.html">Grouped</a></li>
+                                                    <li><a href="product-details-sticky.html">Sticky Info</a></li>
+                                                    <li><a href="product-details-configurable.html">Configurable</a></li>
+                                                    <li><a href="product-details-thumbnail.html">Thumbnail</a></li>
+                                                    <li><a href="product-details-video.html">Video</a></li>
+                                                    <li><a href="product-details-affiliate.html">Affiliate</a></li>
+                                                    <li><a href="product-details-sidebar.html">Sidebar</a></li>
+                                                </ul>
+                                            </li>
+                                            <li class="mega-menu-sub-width20"><a class="menu-title" href="#">Shop Pages</a>
+                                                <ul>
+                                                    <li><a href="{% url "user:my_account" %}">My Account</a></li>
+                                                    <li><a href="checkout.html">Check Out</a></li>
+                                                    <li><a href="{% url "cart:cart_detail" %}">Shopping Cart</a></li>
+                                                    <li><a href="{% url "wishlist:wishlist_view" %}">Wishlist</a></li>
+                                                    <li><a href="order-tracking.html">Order Tracking</a></li>
+                                                    <li><a href="compare.html">Compare</a></li>
+                                                    <li><a href="login-register.html">login / register</a></li>
+                                                </ul>
+                                            </li>
+                                            <li class="mega-menu-sub-width37">
+                                                <div class="banner-menu-content-wrap default-overlay">
+                                                    <a href="product-details.html"><img src="assets/images/menu/banner-header.jpg" alt="banner"></a>
+                                                    <div class="banner-menu-content">
+                                                        <h2>Bikini <br>Collections</h2>
+                                                    </div>
+                                                </div>
+                                            </li>
+                                        </ul>
+                                    </li>
+                                    <li><a href="shop-collection-1.html">Collections <i class="fa fa-angle-down"></i> </a>
+                                        <ul class="sub-menu-width">
+                                            <li><a href="shop-collection-1.html">Shop Collection 01</a></li>
+                                            <li><a href="shop-collection-2.html">Shop Collection 02</a></li>
+                                            <li><a href="shop-metro.html">Shop Metro Layout</a></li>
+                                        </ul>
+                                    </li>
+                                    <li><a href="blog.html">Blog <i class="fa fa-angle-down"></i></a>
+                                        <ul class="sub-menu-width">
+                                            <li><a href="blog.html">Blog Style 01</a></li>
+                                            <li><a href="blog-2.html">Blog Style 02</a></li>
+                                            <li><a href="blog-3.html">Blog Style 03</a></li>
+                                            <li><a href="#">Single Posts <i class="fa fa-angle-right"></i></a>
+                                                <ul class="lavel-menu">
+                                                    <li><a href="blog-details.html">Single Post Style 01</a></li>
+                                                    <li><a href="blog-details-2.html">Single Post Style 02</a></li>
+                                                </ul>
+                                            </li>
+                                        </ul>
+                                    </li>
+                                    <li><a href="shop-instagram.html">Instagram Shop </a></li>
+                                </ul>
+                            </nav>
+                        </div>
+                    </div>
+                    <div class="col-xl-2 col-lg-2">
+                        <div class="header-right-wrap header-right-flex">
+                            <div class="same-style header-wishlist">
+                                <a href="{% url "wishlist:wishlist_view" %}"><i class="fa fa-heart-o"></i></a>
+                            </div>
+                            {% if user.is_authenticated %}
+                            <div class="same-style cart-wrap">
+                                <a href="{% url "cart:cart_detail" %}" class="cart-active">
+                                    <i class="dlicon shopping_bag-20"></i>
+                                    {% comment %} <span class="count-style">02</span> {% endcomment %}
+                                </a>
+                            </div>
+                            {% endif %}
+                            <div class="same-style header-search">
+                                <a class="search-active" href="#">
+                                    <i class="dlicon ui-1_zoom"></i>
+                                </a>
+                            </div>
+                            <div class="same-style header-off-canvas">
+                                <a class="header-aside-button" href="#">
+                                    <i class="dlicon ui-3_menu-left"></i>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <div class="header-small-mobile section-padding-1">
+            <div class="container-fluid">
+                <div class="row align-items-center">
+                    <div class="col-6">
+                        <div class="mobile-logo logo-width">
+                            <a href="index.html">
+                                <img alt="" src="assets/images/logo/logo.png">
+                            </a>
+                        </div>
+                    </div>
+                    <div class="col-6">
+                        <div class="mobile-header-right-wrap">
+                            <div class="header-right-wrap header-right-flex">
+                                <div class="same-style cart-wrap">
+                                    <a href="#" class="cart-active">
+                                        <i class="dlicon shopping_bag-20"></i>
+                                        {% comment %} <span class="count-style">02</span> {% endcomment %}
+                                    </a>
+                                </div>
+                                <div class="same-style header-off-canvas">
+                                    <a class="header-aside-button" href="#">
+                                        <i class="dlicon ui-3_menu-left"></i>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- search start -->
+        <div class="search-content-wrap main-search-active">
+            <a class="search-close"><i class="dlicon ui-1_simple-remove"></i></a>
+            <div class="search-content">
+                <p>Start typing and press Enter to search</p>
+                <form class="search-form" action="{% url 'product:search_view' %}" method="GET">
+                    <input type="text" name="q" placeholder="Search" value="{{ query|default_if_none:'' }}">
+                    <button class="button-search" type="submit"><i class="dlicon ui-1_zoom"></i></button>
+                </form>
+            </div>
+        </div>
+        <!-- mini cart start -->
+        {% if user.is_authenticated %}
+        <div class="sidebar-cart-active">
+            <div class="sidebar-cart-all">
+                <a class="cart-close" href="#"><i class="dlicon ui-1_simple-remove"></i></a>
+                <div class="cart-content">
+                    <h3>Shopping Cart</h3>
+                    <ul>
+                        {% for item in cart_items %}
+                        <li class="single-product-cart">
+                            <div class="cart-img">
+                                <a href="#"><img src="{{ item.product.product_image.url }}" alt=""></a>
+                            </div>
+                            <div class="cart-title">
+                                <h4><a href="#">{{ item.product.product_name }}</a></h4>
+                                <span>{{ item.product.price|floatformat:2 }} * {{ item.quantity|floatformat:2 }}</span>
+                            </div>
+                            <div class="cart-delete">
+                                <a href="#">×</a>
+                            </div>
+                        </li>
+                        {% endfor %}
+                    </ul>
+                    <div class="cart-total">
+                        <h4>Subtotal: <span>{{ total|floatformat:2 }}</span></h4>
+                    </div>
+                    {% if user.is_authenticated %}
+                    <div class="cart-checkout-btn">
+                        <a class="btn-hover cart-btn-style" href="{% url "cart:cart_detail" %}">view cart</a>
+                        {% if cart_items %}
+                            <a class="no-mrg btn-hover cart-btn-style" href="{% url "order:checkout" %}">checkout</a>
+                        {% endif %}
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        {% endif %}
+        <!-- aside start -->
+        
+        {% load tem_filter %}
+
+        <div class="breadcrumb-area section-padding-1 bg-gray breadcrumb-ptb-1">
+            <div class="container-fluid">
+                <div class="breadcrumb-content text-center">
+                    <div class="breadcrumb-title">
+                        <h2>{{ breadcrumbs|last_item }}</h2>
+                    </div>
+                    <ul>
+                        {% for name, url in breadcrumbs %}
+                            {% if forloop.last %}
+                                <li class="active">{{ name }}</li>
+                            {% else %}
+                                <li><a href="{{ url }}">{{ name }}</a></li>
+                                <li><span> &gt; </span></li>
+                            {% endif %}
+                        {% endfor %}
+                    </ul>
+                </div>
+            </div>
+        </div>
+        
+    
+
+        {% block content %}
+        
+        {% endblock %}
+
+        <footer class="footer-area section-padding-1 border-top-3">
+            <div class="container-fluid">
+                <div class="footer-top pt-100 pb-60">
+                    <div class="row">
+                        <div class="footer-column footer-width-24">
+                            <div class="footer-widget footer-about mb-30">
+                                <a href="index.html">
+                                    <img src="assets/images/logo/logo.png" alt="logo">
+                                </a>
+                                <p>Lorem ipsum dolor sit amet, magna habemus ius ad, qui minimum voluptar</p>
+                                <div class="social-icon-style-2 social-icon-hm4">
+                                    <a class="facebook" href="#"><i class="fa fa-facebook"></i></a>
+                                    <a class="twitter" href="#"><i class="fa fa-twitter"></i></a>
+                                    <a class="youtube" href="#"><i class="fa fa-youtube"></i></a>
+                                    <a class="dribbble" href="#"><i class="fa fa-dribbble"></i></a>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="footer-column footer-width-12">
+                            <div class="footer-widget footer-info-list-2 mb-30">
+                                <h3 class="footer-title">Company Link</h3>
+                                <ul>
+                                    <li><a href="#">About Us</a></li>
+                                    <li><a href="#">Help Center</a></li>
+                                    <li><a href="#">Our Team</a></li>
+                                    <li><a href="#">Privacy Policy</a></li>
+                                    <li><a href="#">The Blog</a></li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="footer-column footer-width-14">
+                            <div class="footer-widget footer-info-list-2 mb-30">
+                                <h3 class="footer-title">Userful Link</h3>
+                                <ul>
+                                    <li><a href="#">Guides & Articles</a></li>
+                                    <li><a href="#">Customer Reviews</a></li>
+                                    <li><a href="#">Coupon Codes</a></li>
+                                    <li><a href="#">Military Discount</a></li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="footer-column footer-width-19">
+                            <div class="footer-widget footer-info-list-2 footer-contect mb-30">
+                                <h3 class="footer-title">Contact info</h3>
+                                <ul>
+                                    <li><i class="dlicon ui-2_time-clock"></i> Monday - Friday: 9:00 - 19:00</li>
+                                    <li><i class="dlicon ui-1_email-83"></i> info@example.com</li>
+                                    <li><i class="dlicon tech-2_rotate"></i> (+612) 2531 5600</li>
+                                    <li><i class="dlicon ui-1_home-simple"></i> PO Box 1622 Colins Street West Victoria 8077 Australia</li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="footer-column footer-width-29 mb-30">
+                            <div class="contact-page-map">
+                                <div id="contact-map">
+                                    <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3151.838709675939!2d144.95320007668528!3d-37.817246734238516!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x6ad65d4dd5a05d97%3A0x3e64f855a564844d!2s121%20King%20St%2C%20Melbourne%20VIC%203000%2C%20Australia!5e0!3m2!1sen!2sus!4v1670477011653!5m2!1sen!2sus" style="border:0;width:100%;height:100%;" allowfullscreen="" loading="lazy"></iframe>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="footer-botoom">
+                    <div class="row">
+                        <div class="col-12">
+                            <div class="copyright-2 text-center">
+                                <p>© 2021 <a href="https://hasthemes.com/">Toro.</a> All rights reserved.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </footer>
+        <div class="support-lists">
+            <ul>
+                <li><a href="#"><i class="dlicon ui-3_chat-46"></i></a></li>
+                <li><a href="#"><i class=" dlicon ui-3_phone"></i></a></li>
+                <li><a href="#"><i class="dlicon ui-1_email-85"></i></a></li>
+            </ul>
+        </div>
+        
+        <!-- Modal -->
+        <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close"><span class="dlicon ui-1_simple-remove" aria-hidden="true"></span></button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="row g-0">
+                            <div class="col-lg-6 col-md-12 col-sm-12 col-xs-12">
+                                <div class="quickview-slider-active owl-carousel">
+                                    <a class="img-popup" href="assets/images/product/quickview-1.jpg"><img src="assets/images/product/quickview-1.jpg" alt=""><span>sold uot</span></a>
+                                    <a class="img-popup" href="assets/images/product/quickview-2.jpg"><img src="assets/images/product/quickview-2.jpg" alt=""><span>sold uot</span></a>
+                                </div>
+                                <!-- Thumbnail Large Image End -->
+                            </div>
+                            <div class="col-lg-6 col-md-12 col-sm-12 col-xs-12">
+                                <div class="product-details-content">
+                                    <div class="pro-dec-next-prev">
+                                        <a class="prev" href="#"><i class="dlicon arrows-1_tail-left"></i></a>
+                                        <a class="next" href="#"><i class="dlicon arrows-1_tail-right"></i></a>
+                                    </div>
+                                    <h2 class="uppercase">Quilted parka with hood</h2>
+                                    <h3>₹49.00</h3>
+                                    <div class="product-details-peragraph">
+                                        <p>Donec accumsan auctor iaculis. Sed suscipit arcu ligula, at egestas magna molestie a. Proin ac ex maximus, ultrices justo eget, sodales orci. Aliquam libero ac turpis pharetra, in vehicula scelerisque. Vestibulum ut sem laoreet, feugiat tellus at, hendrerit arcu.</p>
+                                    </div>
+                                    <div class="product-details-action-wrap">
+                                        <div class="product-details-quality">
+                                            <div class="cart-plus-minus">
+                                                <input class="cart-plus-minus-box" type="text" name="qtybutton" value="2">
+                                            </div>
+                                        </div>
+                                        <div class="product-details-cart">
+                                            <a title="Add to cart" href="#">Add to cart</a>
+                                        </div>
+                                        <div class="product-details-wishlist">
+                                            <a title="Add to wishlist" href="#"><i class="fa fa-heart"></i></a>
+                                        </div>
+                                        <div class="product-details-compare">
+                                            <a title="Add to compare" href="#"><i class="dlicon arrows-4_compare"></i></a>
+                                        </div>
+                                    </div>
+                                    <div class="product-details-info">
+                                        <a href="#"><i class="dlicon location_pin"></i>Store availability</a>
+                                        <a href="#"><i class="dlicon envir_car"></i>Delivery and return</a>
+                                        <a href="#"><i class="dlicon design_measure-17"></i>Size Guide</a>
+                                    </div>
+                                    <div class="product-details-meta">
+                                        <span>SKU: REF. LA-140</span>
+                                        <span>Categories: <a href="#">Fashions</a>, <a href="#">Main 01</a>, <a href="#">Main 02</a></span>
+                                        <span>Tags: <a href="#">Blazer</a>, <a href="#">chair</a>, <a href="#">Coat</a>, <a href="#">dress</a>, <a href="#">light</a>, <a href="#">Living</a>, <a href="#">Main 01</a></span>
+                                    </div>
+                                    <div class="social-icon-style-3">
+                                        <a class="facebook" href="#"><i class="fa fa-facebook"></i></a>
+                                        <a class="twitter" href="#"><i class="fa fa-twitter"></i></a>
+                                        <a class="linkedin" href="#"><i class="fa fa-linkedin"></i></a>
+                                        <a class="pinterest" href="#"><i class="fa fa-pinterest-p"></i></a>
+                                        <a class="google-plus" href="#"><i class="fa fa-google-plus"></i></a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Modal end -->
+    </div>
+
+    <!-- All JS is here
+============================================ -->
+
+    <!-- Modernizer JS -->
+    <script src="{% static 'assets/js/vendor/modernizr-3.11.7.min.js'%}"></script>
+    <!-- jquery -->
+    <script src="{% static 'assets/js/vendor/jquery-v3.6.0.min.js'%}"></script>
+    <!-- Popper JS -->
+    <script src="{% static 'assets/js/vendor/popper.js'%}"></script>
+    <!-- Bootstrap JS -->
+    <script src="{% static 'assets/js/vendor/bootstrap.min.js'%}"></script>
+    <script src="{% static 'assets/js/plugins/owl-carousel.js'%}"></script>
+    <script src="{% static 'assets/js/plugins/slick.js'%}"></script>
+    <script src="{% static 'assets/js/plugins/jarallax.min.js'%}"></script>
+    <script src="{% static 'assets/js/plugins/countdown.js'%}"></script>
+    <script src="{% static 'assets/js/plugins/magnific-popup.js'%}"></script>
+    <script src="{% static 'assets/js/plugins/instafeed.js'%}"></script>
+    <script src="{% static 'assets/js/plugins/tilt.js'%}"></script>
+    <script src="{% static 'assets/js/plugins/images-loaded.js'%}"></script>
+    <script src="{% static 'assets/js/plugins/isotope.js'%}"></script>
+    <script src="{% static 'assets/js/plugins/scrolloverflow-fullpage.js'%}"></script>
+    <script src="{% static 'assets/js/plugins/fullpage.js'%}"></script>
+    <script src="{% static 'assets/js/plugins/jquery-ui.js'%}"></script>
+    <script src="{% static 'assets/js/plugins/jquery-ui-touch-punch.js'%}"></script>
+    <script src="{% static 'assets/js/plugins/easyzoom.js'%}"></script>
+    <script src="{% static 'assets/js/plugins/resizesensor.js'%}"></script>
+    <script src="{% static 'assets/js/plugins/sticky-sidebar.js'%}"></script>
+    <script src="{% static 'assets/js/plugins/scrollup.js'%}"></script>
+    <script src="{% static 'assets/js/plugins/select2.min.js'%}"></script>
+    <script src="{% static 'assets/js/plugins/cookie.js'%}"></script>
+    <script src="{% static 'assets/js/plugins/bpopup.js'%}"></script>
+    <script src="{% static 'assets/js/plugins/wow.js'%}"></script>
+    <script src="{% static 'assets/js/plugins/ajax-mail.js'%}"></script>
+    <!-- Main JS -->
+    <script src="{% static 'assets/js/main.js'%}"></script>
+
+</body>
+
+
+<!-- Mirrored from template.hasthemes.com/toro/toro/product-details-2.html by HTTrack Website Copier/3.x [XR&CO'2014], Fri, 09 Feb 2024 11:19:52 GMT -->
+</html>

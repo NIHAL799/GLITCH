@@ -1,0 +1,89 @@
+{% extends 'admin_side/base.html' %}
+{% load static %}
+{% block content %}
+{% for message in messages %}
+<div class="alert alert-{{message.tags}} alert-dismissible fade show" role="alert">
+  <strong></strong>{{message}}
+  <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+</div>
+{% endfor %}
+        <section class="content-main">
+            <div class="content-header">
+                <div>
+                    <h2 class="content-title card-title">Products List</h2>
+                    <p></p>
+                </div>
+                <div>
+                    {% comment %} <a href="#" class="btn btn-light rounded font-md">Export</a>
+                    <a href="#" class="btn btn-light rounded  font-md">Import</a> {% endcomment %}
+                    {% comment %} <a href="{% url 'product:admn_variation_list' %}" class="btn btn-primary btn-sm rounded">Variations</a> {% endcomment %}
+                
+                    <a href="{% url "product:admin_add_products" %}" class="btn btn-primary btn-sm rounded">Create new</a>
+                    
+                </div>
+                
+            </div>
+            <div class="card mb-4">
+                <header class="card-header">
+                    
+                        
+                </header> <!-- card-header end// -->
+
+                {% for product in products%}
+                <div class="card-body">
+                    <article class="itemlist">
+                        <div class="row align-items-center">
+                            
+                            <div class="col-lg-4 col-sm-4 col-8 flex-grow-1 col-name">
+                                <a class="itemside" href="#">
+                                    <div class="left">
+                                        
+                                        <img src="{{product.product_image.url}}" class="img-sm img-thumbnail" alt="Item">
+                                        
+                                    </div>
+                                    <div class="info">
+                                        <h6 class="mb-0">{{product.product_name}}</h6>
+                                    </div>
+                                </a>
+                            </div>
+                            <div class="col-lg-2 col-sm-2 col-4 col-price"> <span><i class="fa-solid fa-indian-rupee-sign"></i>{{product.price}}</span> </div>
+                            {% if product.soft_deleted %}
+                            <div class="col-lg-2 col-sm-2 col-4 col-status">
+                                <span class="badge rounded-pill alert-danger">InActive</span>
+                            </div>
+                            {% else %}
+                            <div class="col-lg-2 col-sm-2 col-4 col-status">
+                                <span class="badge rounded-pill alert-success">Active</span>
+                            </div>
+                            {% endif %}
+                            <div class="col-lg-1 col-sm-2 col-4 col-date">
+                                <span> {{product.created_date}} </span>
+                            </div>
+                            <div class="col-lg-2 col-sm-2 col-4 col-action text-end">   
+                                <a href="{% url 'product:manage_sizes'  product.id %}" class="btn btn-sm font-sm rounded btn-brand">
+                                    <i class="material-icons md-edit"></i> Manage sizes,stocks
+                                </a>
+                                <a href="{% url 'product:admin_edit_product'  product.id %}" class="btn btn-sm font-sm rounded btn-brand">
+                                    <i class="material-icons md-edit"></i> Edit
+                                </a>
+
+                                {% if product.soft_deleted %}
+                                <a href="{% url 'product:admin_delete_product' id=product.id %} " class="btn btn-sm font-sm btn-light rounded">
+                                    <i class="material-icons md-delete_forever"></i> UnListed
+                                </a>
+                                {% else %}
+                                <a href="{% url 'product:admin_delete_product' id=product.id %} " class="btn btn-sm font-sm btn-light rounded">
+                                    <i class="material-icons md-delete_forever"></i> List
+                                </a>
+                                {% endif %}
+
+                            </div>
+                        </div> <!-- row .// -->
+                    </article> <!-- itemlist  .// -->
+                </div> <!-- card-body end// -->
+                {% endfor %}
+
+            </div> <!-- card end// -->
+            
+        </section> <!-- content-main end// -->
+        {% endblock content %}

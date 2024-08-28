@@ -1,0 +1,82 @@
+{% extends 'admin_side/base.html' %}
+{% load static %}
+{% block content %}
+{% for message in messages %}
+<div class="alert alert-{{message.tags}} alert-dismissible fade show" role="alert">
+  <strong></strong>{{message}}
+  <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+</div>
+{% endfor %}
+
+<section class="content-main">
+    <div class="row">
+        <div class="col-6">
+            <div class="content-header">
+                <h2 class="content-title">Add New Product</h2>
+            </div>
+        </div>
+    </div>
+    
+    <div class="row">
+        <div class="col-lg-6">
+            <div class="card mb-4">
+                <div class="card-body">
+                    <form method="POST" action="{% url 'product:admin_add_products' %}" enctype="multipart/form-data">
+                        {% csrf_token %}
+                        {{ form.non_field_errors }}
+
+                        <label class="form-label" for="product_name">Product Name:</label>
+                        <input class="form-control" type="text" name="product_name" required>
+                        {{ form.product_name.errors }}<br>
+        
+                        <label class="form-label" for="category">Category:</label>
+                        <select class="form-control" name="category">
+                            {% for category in categories %}
+                            <option value="{{ category.id }}">{{ category.category_name }}</option>
+                            {% endfor %}
+                        </select>
+                        {{ form.category.errors }}<br>
+
+                        <label class="form-label" for="description">Description:</label><br>
+                        <textarea class="form-control" name="description" rows="4" cols="50"></textarea>
+                        {{ form.description.errors }}<br>
+        
+                        <label class="form-label" for="price">Price:</label>
+                        <input class="form-control"  type="number" name="price" required>
+                        {{ form.price.errors }}<br>
+
+                        <label class="form-label" for="is_offer_available">Is Product in Offer:</label>
+                        <input class="form-check-input" type="checkbox" name="is_offer_available" id="is_offer_available">
+                        {{ form.is_offer_available.errors }}<br>
+
+
+                        <label class="form-label" for="offer_percentage">Offer Percentage:</label>
+                        <input class="form-control" type="number" value='0.00' name="offer_percentage" required>
+                        {{ form.offer_percentage.errors }}<br>
+                        
+                        <label class="form-label" for="product_image">Product Image:</label>
+                        <input class="form-control" type="file" name="product_image" accept="image/*">
+                        {{ form.product_image.errors }}<br>
+       
+                        <label class="form-label" for="product_image2">Product Image2:</label>
+                        <input class="form-control" type="file" name="product_image2" accept="image/*">
+                        {{ form.product_image2.errors }}<br>
+       
+                        <label class="form-label" for="product_image3">Product Image3:</label>
+                        <input required='False' class="form-control" type="file" name="product_image3" accept="image/*">
+                        {{ form.product_image3.errors }}<br>
+       
+                        <label class="form-label" for="product_image4">Product Image4:</label>
+                        <input class="form-control" type="file" name="product_image4" accept="image/*">
+                        {{ form.product_image4.errors }}<br>
+
+                        <div>
+                            <button type="submit" class="btn btn-md rounded font-sm hover-up">Publish</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock content %}

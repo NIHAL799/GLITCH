@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Order Confirmation</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f7f7f7;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+        .confirmation-container {
+            background-color: white;
+            padding: 40px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            max-width: 400px;
+            width: 100%;
+        }
+        .confirmation-title {
+            font-size: 24px;
+            margin-bottom: 20px;
+            color: #333;
+        }
+        .confirmation-message {
+            font-size: 18px;
+            margin-bottom: 30px;
+            color: #555;
+        }
+        .continue-shopping-btn {
+            display: inline-block;
+            background-color: #000;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 4px;
+            text-decoration: none;
+            font-size: 16px;
+        }
+        .continue-shopping-btn:hover {
+            background-color: #444;
+        }
+    </style>
+</head>
+<body>
+    <div class="confirmation-container">
+        <h1 class="confirmation-title">Order Confirmed!</h1>
+        <p class="confirmation-message">Thank you for your purchase. Your order has been confirmed and is being processed.</p>
+        <h4>{{order.payment_status}}</h4>
+        {% if order.payment_status == 'failed' %}
+           <a href="{% url 'order:retry_payment' order.id %}" class="continue-shopping-btn">Retry Payment</a>
+           <a href="{% url 'user:home' %}" class="continue-shopping-btn">Go To Home</a>
+        {% elif order.payment_status == 'paid' or order.payment_status == 'pending' %}
+            <a href="{% url 'user:home' %}" class="continue-shopping-btn">Go To Home</a>
+        {% endif %}
+    </div>
+</body>
+</html>

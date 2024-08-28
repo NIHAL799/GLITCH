@@ -1,0 +1,287 @@
+{% extends "user_side/base2.html" %}
+
+{% block title %}
+My Account
+{% endblock title %}
+
+{% block content %}
+
+<style>
+    .custom-btn {
+        background-color: #007bff;
+        border: none;
+        color: white;
+        padding: 10px 20px;
+        text-align: center;
+        text-decoration: none;
+        display: inline-block;
+        font-size: 16px;
+        margin: 4px 2px;
+        transition-duration: 0.4s;
+        cursor: pointer;
+        border-radius: 5px;
+    }
+    
+    .custom-btn:hover {
+        background-color: white;
+        color: black;
+        border: 2px solid #007bff;
+    }
+</style>
+<div class="my-account-area pt-100 pb-95">
+    <div class="container">
+        <div class="row flex-row-reverse">
+            <div class="col-lg-12">
+                <div class="myaccount-tab-menu nav" role="tablist">
+                    <a href="#dashboard" class="active" data-bs-toggle="tab">Dashboard</a>
+                    <a href="#orders" data-bs-toggle="tab">Orders</a>
+                    <a href="#wallet" data-bs-toggle="tab">Wallet</a>
+                    <a href="#address-edit" data-bs-toggle="tab">Address</a>
+                    <a href="#account-info" data-bs-toggle="tab">Account Details</a>
+                    <a href="{% url 'user:signout' %}">Logout</a>
+                </div>
+                <!-- My Account Tab Menu End -->
+                <!-- My Account Tab Content Start -->
+                <div class="tab-content" id="myaccountContent">
+                    <!-- Single Tab Content Start -->
+                    <div class="tab-pane fade show active" id="dashboard" role="tabpanel">
+                        <div class="myaccount-content">
+                            <div class="welcome">
+                                <p>Hello, <strong>{{ user.first_name }}</strong> 
+                                (If Not <strong>{{ user.first_name }}!</strong><a href="{% url 'user:signout' %}" class="logout"> Logout</a>)</p>
+                            </div>
+                            <p>Your referral code: <strong>{{ user.referral_code }}</strong></p>
+                            <p>Refer a friend and earn 1000 to your wallet when they sign up using your referral code!</p>
+                            <p class="mb-0">From your account dashboard, you can view your recent orders, manage your shipping and billing addresses, and edit your password and account details.</p>
+                        </div>
+                    </div>
+                    <!-- Single Tab Content End -->
+                    <!-- Single Tab Content Start -->
+                    <div class="tab-pane fade" id="orders" role="tabpanel">
+                        <div class="myaccount-table table-responsive text-center">
+                            <table class="table table-bordered">
+                                <thead class="thead-light">
+                                    <tr>
+                                        <th>Billing Name</th>
+                                        <th>Order</th>
+                                        <th>Date</th>
+                                        <th>Total</th>
+                                        <th>Payment Method</th>
+                                        <th>Payment Status</th>
+                                        <th>Action</th>
+                                        <th>Invoice</th>
+                                        {% if order.payment_status == 'failed' %}
+                                            <th>Retry Payment</th>
+                                        {% endif %}
+                                    </tr>
+                                </thead>
+                                {% load tem_filter %}
+                                <tbody>
+                                    {% for order in orders %}
+                                    <tr>
+                                        <td>{{ order.address.first_name }}</td>
+                                        <td>{{ order.id }}</td>
+                                        <td>{{ order.created_at|date:"M d, Y" }}</td>
+                                        <td>${{ order.payable_amount }}</td>
+                                        <td>{{ order.payment_method }} </td>
+                                        <td>{{ order.payment_status }} </td>
+                                        <td>
+                                            <a href="{% url 'order:order_detail' order.id %}" class="check-btn sqr-btn">View</a>
+                                            {% if order.status == 'confirmed' %}
+                                                <a href="{% url 'order:cancel_order' order.id %}" class="check-btn sqr-btn" onclick="return confirm('Are you sure you want to cancel this order?');">Cancel</a>
+                                            {% endif %}
+                                            
+                                        </td>
+                                        <td>
+                                            <a href="{% url 'order:download_invoice' order.id %}" class="check-btn sqr-btn" >Download Invoice</a>    
+                                        </td>
+                                        {% if order.payment_status == 'failed' %}
+                                            <td>
+                                                <a href="{% url 'order:retry_payment' order.id %}" class="check-btn sqr-btn">View</a>
+                                            </td>
+                                        {% endif %}
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <!-- Single Tab Content End -->
+                    
+                    <!-- Single Tab Content Start -->
+                    <div class="tab-pane fade" id="wallet" role="tabpanel">
+                        <div class="myaccount-content">
+                            <h3>Wallet Balance</h3>
+                            <p>Your current balance is: ₹{{ wallet.balance }}</p>
+                            <button type="button" class="custom-btn" data-bs-toggle="modal" data-bs-target="#walletModal">View Transaction History</button>
+                        </div>
+                        <form action='{% url "wallet:wallet_recharge" %}' method="post">
+                            {% csrf_token %}
+                            <div class="form-group">
+                                <label for="amount">Amount</label>
+                                <input type="number" class="form-control" id="amount" name="amount" required>
+                            </div>
+                            <button type="submit" class="btn btn-primary mt-3" id="rzp-button1">Proceed to Pay</button>
+                        </form>
+                    </div>
+                    <!-- Single Tab Content End -->
+                    
+                    <!-- Wallet Modal Start -->
+                    <div class="modal fade" id="walletModal" tabindex="-1" aria-labelledby="walletModalLabel" aria-hidden="true">
+                        <div class="modal-dialog modal-lg">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="walletModalLabel">Transaction History</h5>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body">
+                                    <div class="table-responsive">
+                                        <table class="table table-bordered">
+                                            <thead class="thead-light">
+                                                <tr>
+                                                    <th>Date</th>
+                                                    <th>Transaction ID</th>
+                                                    <th>Amount</th>
+                                                    <th>Description</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                {% for transaction in transactions %}
+                                                <tr>
+                                                    <td>{{ transaction.timestamp|date:"M d, Y" }}</td>
+                                                    <td>{{ transaction.id }}</td>
+                                                    <td>₹{{ transaction.amount }}</td>
+                                                    <td>{{ transaction.description }}</td>
+                                                </tr>
+                                                {% endfor %}
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Wallet Modal End -->
+                    
+                    <!-- Single Tab Content Start -->
+                    <div class="tab-pane fade" id="address-edit" role="tabpanel">
+                        <div class="myaccount-content">
+                            {% for addr in address %}
+                                <address>
+                                    <p><strong>{{ addr.first_name }} {{ addr.last_name }}</strong></p>
+                                    <p>{{ addr.street_address }}, {{ addr.apartment_address }}<br>
+                                       {{ addr.city }}, {{ addr.district }}, {{ addr.country }}<br>
+                                       {{ addr.postcode }}</p>
+                                    <p>Mobile: {{ addr.phone }}</p>
+                                    <a href="{% url 'user:edit_address' addr.id %}" class="check-btn sqr-btn"><i class="fa fa-edit"></i> Edit Address</a>
+                                </address>
+                            {% empty %}
+                                <p>No addresses available.</p>
+                            {% endfor %}
+                            <a href="{% url 'user:add_address' %}" class="check-btn sqr-btn"><i class="fa fa-edit"></i> Add Address</a>
+                        </div>
+                    </div>
+                    <!-- Single Tab Content End -->
+                    <!-- Single Tab Content Start -->
+                    <div class="tab-pane fade" id="account-info" role="tabpanel">
+                        <div class="myaccount-content">
+                            <div class="account-details-form">
+                                <form method='post' action="{% url "user:edit_profile" %}">
+                                {% csrf_token %}
+                                    <div class="row">
+                                        <div class="col-lg-6">
+                                            <div class="single-input-item">
+                                                <label for="first-name" class="required">First Name <span>*</span></label>
+                                                <input value='{{ user.first_name }}' name='fname' type="text" id="first-name" />
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-6">
+                                            <div class="single-input-item">
+                                                <label for="last-name" class="required">Last Name <span>*</span></label>
+                                                <input value='{{ user.last_name }}' name='lname' type="text" id="last-name" />
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="single-input-item">
+                                        <label for="display-name" class="required">Username <span>*</span></label>
+                                        <input value='{{ user.username }}' name ='username' type="text" id="display-name" />
+                                    </div>
+                                    <div class="single-input-item">
+                                        <label for="phone" class="required">Phone <span>*</span></label>
+                                        <input value='{{ user.phone }}' name ='phone' type="text" id="phone" />
+                                    </div>
+                                    <div class="single-input-item">
+                                        <label for="email" class="required">Email Address <span>*</span></label>
+                                        <input value='{{ user.email }}' name='email' type="email" id="email" />
+                                    </div>
+                                    
+                                    <fieldset>
+                                        <legend>Password change</legend>
+                                        <div class="single-input-item">
+                                            <label for="current-pwd" class="required">Current password (leave blank to leave unchanged)</label>
+                                            <input name='current_password' type="password" id="current-pwd" />
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-lg-6">
+                                                <div class="single-input-item">
+                                                    <label for="new-pwd" class="required">New password (leave blank to leave unchanged)</label>
+                                                    <input name='new_password' type="password" id="new-pwd" />
+                                                </div>
+                                            </div>
+                                            <div class="col-lg-6">
+                                                <div class="single-input-item">
+                                                    <label for="confirm-pwd" class="required">Confirm new password</label>
+                                                    <input name='confirm_password' type="password" id="confirm-pwd" />
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </fieldset>
+                                    <div class="single-input-item">
+                                        <button class="check-btn sqr-btn " type="submit">Save Changes</button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Single Tab Content End -->
+                </div>
+                <!-- My Account Tab Content End -->
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+<script>
+var options = {
+    "key": "{{key}}", // Enter the Key ID generated from the Dashboard
+    "amount": "{{amount}}", // Amount is in currency subunits. Default currency is INR. Hence, 50000 refers to 50000 paise
+    "currency": "INR",
+    "name": "Glitch",
+    "description": "Wallet Recharge",
+    "image": "https://example.com/your_logo",
+    "order_id": "{{id}}",
+    "callback_url": "{{callback_url}}", // URL for success callback
+    "prefill": {
+        "name": "{{user.first_name}}",
+        "email": "{{user.email}}",
+        "contact": "{{user.phone}}"
+    },
+    "notes": {
+        "address": "Razorpay Corporate Office"
+    },
+    "theme": {
+        "color": "#3399cc"
+    }
+};
+var rzp1 = new Razorpay(options);
+document.getElementById('rzp-button1').onclick = function(e){
+    console.log('button worked')
+    rzp1.open();
+    e.preventDefault();
+}
+</script>
+{% endblock content %}

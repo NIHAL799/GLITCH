@@ -1,0 +1,154 @@
+{% extends 'admin_side/base.html' %}
+{% load static %}
+{% block content %}
+<section class="content-main">
+    <div class="content-header">
+        <div>
+            <h2 class="content-title card-title">Coupon List</h2>
+            <p>Create Coupon status.</p>
+        </div>
+        <div>
+            <a href="{% url "coupons:create_coupon" %}" class="btn btn-primary btn-sm rounded">Create Coupon</a>
+        </div>
+    </div>
+    <div class="card mb-4">
+        <div class="card-body">
+            <article class="itemlist">
+                <div class="row align-items-center">
+                    <table class="table table-bordered">
+                        <thead>
+                            <tr>
+                                <th>Coupon <br>Code</th>
+                                <th>Start  <br>Date</th>
+                                <th>Expiry  <br>Date</th>
+                                <th>Status</th>
+                                <th>Offer<br> Percentage</th>
+                                <th>Overall <br>Usage<br> Limit</th>
+                                <th>Limit <br>per <br>User</th>
+                                <th>Minimum <br>Order <br>Amount</th>
+                                <th>Maximum <br>Order <br>Amount</th>
+                                <th>Usage <br>Count</th>
+                                <th>Action</th>
+                                <th>Delete</th>
+                                <!-- Add more columns as needed -->
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for coupon in coupons %}
+                                <tr>
+                                    <td>{{ coupon.code }}</td>
+                                    <td>{{ coupon.start_date }}</td>
+                                    <td>{{ coupon.expiry_date }}</td>
+                                    <td>
+                                        {% if coupon.is_active %}
+                                        <span class="badge rounded-pill alert-success">Active</span>
+                                        {% else %}
+                                        <span class="badge rounded-pill alert-danger">Expired</span>
+                                        {% endif %}
+                                    </td>
+                                    <td>{{ coupon.offer_percentage }}</td>
+                                    <td>{{ coupon.overall_usage_limit }}</td>
+                                    <td>{{ coupon.limit_per_user }}</td>
+                                    <td>{{ coupon.minimum_order_amount }}</td>
+                                    <td>{{ coupon.maximum_order_amount }}</td>
+                                    <td>{{ coupon.usage_count }}</td>
+                                    <td>
+                                        {% if coupon.is_active %}
+                                        <a href="{% url "coupons:activate_deactivate" coupon.id %}"><button class="btn btn-sm font-sm rounded btn-brand deactivate-btn" data-coupon-id="{{ coupon.id }}">
+                                            <i class="material-icons md-lock"></i> Deactivate
+                                        </button></a>
+                                        {% else %}
+                                        <a href="{% url "coupons:activate_deactivate" coupon.id %}"><button class="btn btn-sm font-sm rounded btn-brand activate-btn" data-coupon-id="{{ coupon.id }}">
+                                            <i class="material-icons md-lock_open "></i> Activate
+                                        </button></a>
+                                        {% endif %}
+                                        
+                                        <a href="{% url 'coupons:edit_coupon' coupon.id %}" class="btn btn-sm font-sm rounded btn-brand">
+                                            <i class="material-icons md-edit"></i> Edit
+                                        </a> 
+                                        
+                                    </td>
+                                    <td>
+                                        <form method="post" action="{% url 'coupons:delete_coupon' coupon.id %}" class="delete-form" style="display:inline;">
+                                            {% csrf_token %}
+                                            <button type="button" class="btn btn-sm font-sm rounded btn-brand delete-btn">
+                                                <i class="material-icons md-delete"></i> Delete
+                                            </button>
+                                        </form>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div> <!-- row .// -->
+            </article> <!-- itemlist  .// -->
+        </div> <!-- card-body end// -->
+    </div> <!-- card end//-->
+</section> <!-- content-main end// -->
+{% endblock %}
+{% block scripts %}
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        document.querySelectorAll('.delete-btn').forEach(function(button) {
+            button.addEventListener('click', function(event) {
+                event.preventDefault();
+                const form = this.closest('.delete-form');
+                Swal.fire({
+                    title: 'Are you sure?',
+                    text: "You won't be able to revert this!",
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#3085d6',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: 'Yes, delete it!'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        form.submit();
+                    }
+                });
+            });
+        });
+
+        // AJAX function to deactivate coupon
+        $(".deactivate-btn").click(function () {
+            var couponId = $(this).data("coupon-id");
+            $.ajax({
+                url: "{% url 'deactivate_coupon' %}",
+                method: "POST",
+                data: {
+                    csrfmiddlewaretoken: "{{ csrf_token }}",
+                    coupon_id: couponId
+                },
+                success: function (data) {
+                    // Reload the page after deactivation
+                    location.reload();
+                },
+                error: function (xhr, status, error) {
+                    console.error(xhr.responseText);
+                }
+            });
+        });
+
+        // AJAX function to activate coupon
+        $(".activate-btn").click(function () {
+            var couponId = $(this).data("coupon-id");
+            $.ajax({
+                url: "{% url 'activate_coupon' %}",
+                method: "POST",
+                data: {
+                    csrfmiddlewaretoken: "{{ csrf_token }}",
+                    coupon_id: couponId
+                },
+                success: function (data) {
+                    // Reload the page after activation
+                    location.reload();
+                },
+                error: function (xhr, status, error) {
+                    console.error(xhr.responseText);
+                }
+            });
+        });
+    });
+</script>
+{% endblock scripts %}

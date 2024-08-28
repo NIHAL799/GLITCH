@@ -1,0 +1,147 @@
+{% extends "user_side/base2.html" %}
+{% load static %}
+
+<title>
+    {% block title %}
+    Cart G L I T C H
+    {% endblock title %}
+</title>
+
+{% block content %}
+
+<style>
+    .product-details-quality {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-top: 10px;
+    }
+    
+    .quality-width-cart {
+        width: 100px; /* Adjust as needed */
+    }
+    
+    .cart-plus-minus {
+        position: relative;
+    }
+    
+    .cart-plus-minus-box {
+        width: 60px;
+        padding: 5px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        text-align: center;
+        transition: border-color 0.3s ease-in-out;
+    }
+    
+    .cart-plus-minus-box:focus {
+        border-color: #007bff;
+        outline: none;
+        box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+    }
+    
+    .cart-plus-minus-box:hover {
+        cursor: pointer;
+        border-color: #007bff;
+    }
+</style>
+
+
+
+<!-- cart start -->
+<div class="cart-main-area pt-90 pb-100">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12 col-md-12 col-sm-12 col-12">
+                <div class="row">
+                    <div class="col-lg-8">
+                        <div class="table-content table-responsive cart-table-content">
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th></th>
+                                        <th></th>
+                                        <th>Product</th>
+                                        <th>Price</th>
+                                        <th>Quantity</th>
+                                        <th>Size</th>
+                                        <th>Total</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for item in cart_items %}
+                                    <tr>
+                                        <td class="product-remove">
+                                            <a href="{% url 'cart:remove_from_cart' item.id %}"><i class="dlicon ui-1_simple-remove"></i></a>
+                                        </td>
+                                        <td class="product-img">
+                                            <a href="#"><img class="cart-product-image" src="{{ item.product.product_image.url }}" alt="" style="width: 80px; height: auto;"></a>
+                                        </td>
+                                        <td class="product-name"><a href="#">{{ item.product.product_name }}</a></td>
+                                        <td class="product-price"><span class="amount">{{ item.product.discounted_price|floatformat:2 }}</span></td>
+                                        <td class="cart-quality">
+                                            <!-- Form to update quantity -->
+                                            {% load custom_filters %}
+
+                                            <form action="{% url 'cart:update_cart_item' item.id %}" method="post" class="d-inline-block">
+                                                {% csrf_token %}
+                                                <div class="product-details-quality quality-width-cart">
+                                                    <div class="cart-plus-minus">
+                                                        <input class="cart-plus-minus-box" type="number" name="qtybutton" value="{{ item.quantity }}" min="1" required>
+                                                    </div>
+                                                    <button type="submit" class="btn btn-primary btn-sm">
+                                                        <i class="fas fa-check"></i> 
+                                                    </button>
+                                                </div>
+                                            </form>
+                                        </td>
+                                        <td class="product-price"><span class="amount">{{ item.size }}</span></td>
+                                        <td class="product-total">
+                                            {{ item.product.discounted_price|mul:item.quantity|floatformat:2 }}
+                                        </td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="cart-shiping-update-wrapper">
+                            <div class="cart-clear">
+                                <a href="{% url "cart:clear_cart" %}">Clear Cart</a>
+                            </div>
+                            {% comment %} <div class="cart-clear">
+                                <a href="#">Update Cart</a>
+                            </div> {% endcomment %}
+                        </div>
+                    </div>
+                    <div class="col-lg-4">
+                        <div class="grand-total-wrap">
+                            <h4>Cart totals</h4>
+                            <div class="grand-total-content">
+                                <ul>
+                                    <li>Subtotal <span>{{ subtoatal|floatformat:2 }}</span></li>
+                                    <li>Discount <span>{{ discount|floatformat:2 }}</span></li>
+                                    <li>Total <span>{{ total|floatformat:2 }}</span></li>
+                                </ul>
+                            </div>
+                            <div class="grand-btn">
+                                <a href="{% url 'order:checkout' %}">Proceed to checkout</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- cart end -->
+{% endblock content %}
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    document.querySelectorAll('.cart-plus-minus-box').forEach(function(input) {
+        input.addEventListener('change', function() {
+            this.closest('form').submit();
+        });
+    });
+});
+</script>

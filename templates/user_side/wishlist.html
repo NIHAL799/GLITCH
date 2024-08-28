@@ -1,0 +1,62 @@
+{% extends "user_side/base2.html" %}
+{% load static %}
+{% block title %}
+Wishlist G L I T C H
+{% endblock title %}
+{% block content %}
+
+
+
+
+<div class="wishlist-main-area pt-100 pb-100">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12 col-md-12 col-sm-12 col-12">
+                <form action="#">
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <div class="table-content table-responsive wishlist-table-content">
+                                <table>
+                                    <thead>
+                                        <tr>
+                                            <th></th>
+                                            <th></th>
+                                            <th>Product</th>
+                                            <th>Stock Status</th>
+                                            <th> Price</th>
+                                            <th class="wishlist-cart-none"><span>Add to cart</span></th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {% for item in wishlist_items %}
+                                        <tr>
+                                            <td class="wishlist-remove">
+                                                <a href="{% url 'wishlist:remove_from_wishlist' item.product.id %}"><i class="dlicon ui-1_simple-remove"></i></a>
+                                            </td>
+                                            <td class="wishlist-img">
+                                                <a href="{% url 'product:product_details' item.product.id %}"><img src="{{ item.product.product_image.url }}" alt="" style="width: 100px; height: auto;"></a>
+                                            </td>
+                                            <td class="wishlist-name">
+                                                <a href="{% url 'product:product_details' item.product.id %}">{{ item.product.product_name }}</a>
+                                            </td>
+                                            <td class="wishlist-stock">
+                                                <span>In Stock</span>
+                                            </td>
+                                            <td class="wishlist-price"><span class="amount">{{ item.product.price }}</span></td>
+                                            {% comment %} <td class="wishlist-cart">
+                                                <a href="#">Add to cart</a>
+                                            </td> {% endcomment %}
+                                        </tr>
+                                        
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,235 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Verify-OTP</title>
+  <link rel="stylesheet" href="{% static 'user_side/css/user_signup.css' %}">
+  <!-- Include Toastify CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css" rel="stylesheet">
+  <style>
+    /* Your CSS styles */
+    .container {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .form {
+        width: 300px;
+        background-color: white;
+        border-radius: 12px;
+        padding: 20px;
+        margin: auto;
+        margin-top: 100px;
+    }
+
+    .title {
+        font-size: 20px;
+        font-weight: bold;
+        color: black;
+        margin-bottom: 10px;
+        text-align: center;
+    }
+
+    .message {
+        color: #a3a3a3;
+        font-size: 14px;
+        margin-top: 4px;
+        text-align: center;
+    }
+
+    .inputs {
+        display: flex;
+        justify-content: space-between;
+        margin-top: 10px;
+    }
+
+    .inputs input {
+        width: 32px;
+        height: 32px;
+        text-align: center;
+        border: none;
+        border-bottom: 1.5px solid #d2d2d2;
+    }
+
+    .inputs input:focus {
+        border-bottom: 1.5px solid royalblue;
+        outline: none;
+    }
+
+    .action {
+        margin-top: 24px;
+        padding: 12px 16px;
+        border-radius: 8px;
+        border: none;
+        background-color: #a23f25;
+        color: white;
+        cursor: pointer;
+        width: 100%;
+    }
+
+    .separator {
+        width: 100%;
+        margin: 20px 0;
+        border: none;
+        height: 2px;
+        background-color: #a3a3a3;
+    }
+
+    .resend-action {
+        padding: 12px 16px;
+        border-radius: 8px;
+        border: none;
+        background-color: #a23f25;
+        color: white;
+        cursor: pointer;
+        margin-top: 20px;
+    }
+
+    .resend-action:disabled {
+        background-color: #ccc;
+        cursor: not-allowed;
+    }
+
+    .countdown {
+        margin-top: 10px;
+        font-size: 14px;
+        color: #a3a3a3;
+    }
+
+    .error-message {
+        color: red;
+        font-size: 14px;
+        margin-top: 8px;
+        text-align: center;
+    }
+  </style>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+</head>
+<body>
+  <div class="container">
+    <form class="form" id="otpForm" method="post" action="{% url 'user:login_verify_otp' %}">
+        {% csrf_token %}
+      <div class="title">OTP Verification</div>
+      <p class="message">We have sent a verification code to your email address</p> 
+      <div class="inputs"> 
+          <input id="input1" type="text" maxlength="1" name="otp_1">
+          <input id="input2" type="text" maxlength="1" name="otp_2">
+          <input id="input3" type="text" maxlength="1" name="otp_3">
+          <input id="input4" type="text" maxlength="1" name="otp_4">
+      </div> 
+      <input type="hidden" name="otpEntered" id="otpEntered">
+      <button type="button" class="action" onclick="verifyOTP()">Verify</button> 
+      <div id="error-message" class="error-message"></div> <!-- Error message container -->
+      <hr class="separator">
+      <div class="countdown" id="countdown"></div>
+    </form>
+    <button  class="resend-action" id="resend-otp" onclick="resendOTP()" disabled>Resend OTP</button>
+  </div>
+  <!-- Include Toastify JavaScript -->
+  <script src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
+  <script>
+    // Function to start the countdown timer
+    function startCountdown() {
+        var countdown = 120; // Seconds
+        var timer = setInterval(function() {
+            countdown--;
+            document.getElementById('countdown').innerHTML = 'Resend OTP in ' + countdown + ' seconds';
+            if (countdown <= 0) {
+                clearInterval(timer);
+                document.getElementById('resend-otp').disabled = false;
+                document.getElementById('countdown').innerHTML = 'Resend OTP in 0 seconds';
+            }
+        }, 1000);
+    }
+
+    // Initialize countdown timer on page load
+    startCountdown();
+
+    /* Function to verify OTP via AJAX */
+    function verifyOTP() {
+      var otp1 = document.getElementById('input1').value;
+      var otp2 = document.getElementById('input2').value;
+      var otp3 = document.getElementById('input3').value;
+      var otp4 = document.getElementById('input4').value;
+      var otpEntered = otp1 + otp2 + otp3 + otp4;
+      var csrfToken = document.getElementsByName('csrfmiddlewaretoken')[0].value;
+
+      $.ajax({
+          type: 'POST',
+          url: "{% url 'user:login_verify_otp' %}",
+          data: {
+              otpEntered: otpEntered,
+              csrfmiddlewaretoken: csrfToken
+          },
+          success: function(response) {
+            // Display success message using Toastify
+            var toast = Toastify({
+                text: response.message,
+                duration: 3000, // Duration in milliseconds
+                close: true, // Whether to show the close button
+                gravity: 'top', // Position of the toast
+                position: 'right', // Position of the toast
+                backgroundColor: '#32CD32', // Background color
+            }).showToast();
+        
+            // Wait for the toast to disappear and then redirect to login page
+            setTimeout(function() {
+                window.location.href = "{% url 'user:home' %}";
+            }, 3000); // Wait for 3000 milliseconds, same as toast duration
+        },
+          
+          error: function(xhr, status, error) {
+              // Display error message using Toastify
+              Toastify({
+                  text: xhr.responseText,
+                  duration: 3000, // Duration in milliseconds
+                  close: true, // Whether to show the close button
+                  gravity: 'top', // Position of the toast
+                  position: 'right', // Position of the toast
+                  backgroundColor: '#FF6347' // Background color
+              }).showToast();
+          }
+      });
+  }
+
+    /* Function to resend OTP */
+    function resendOTP() {
+        var xhr = new XMLHttpRequest();
+        xhr.open('POST', '{% url "user:resend_otp" %}', true);
+        xhr.setRequestHeader('X-CSRFToken', '{{ csrf_token }}');
+        xhr.setRequestHeader('Content-Type', 'application/json');
+        xhr.onreadystatechange = function () {
+            if (xhr.readyState === 4) {
+                if (xhr.status === 200) {
+                    // Display success message using Toastify
+                    Toastify({
+                        text: 'OTP has been resent to your email.',
+                        duration: 1000, // Duration in milliseconds
+                        close: true, // Whether to show the close button
+                        gravity: 'top', // Position of the toast
+                        position: 'right', // Position of the toast
+                        backgroundColor: '#32CD32', // Background color
+                    }).showToast();
+                    startCountdown(); // Restart countdown timer after successful resend
+                } else {
+                    // Display error message using Toastify
+                    Toastify({
+                        text: 'Failed to resend OTP. Please try again.',
+                        duration: 1500, // Duration in milliseconds
+                        close: true, // Whether to show the close button
+                        gravity: 'top', // Position of the toast
+                        position: 'right', // Position of the toast
+                        backgroundColor: '#FF6347', // Background color
+                    }).showToast();
+                }
+            }
+        };
+        xhr.send();
+        document.getElementById('resend-otp').disabled = true; // Disable resend OTP button until the timer finishes
+    }
+  </script>
+</body>
+</html>

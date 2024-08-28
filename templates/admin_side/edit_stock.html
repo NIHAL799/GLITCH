@@ -1,0 +1,27 @@
+{% extends 'admin_side/base.html' %}
+{% load static %}
+{% block content %}
+<section class="content-main">
+    <div class="row">
+        <div class="col-6">
+            <div class="content-header">
+                <h2 class="content-title">Edit Stock for Size: {{ size.size }}</h2>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-lg-6">
+            <div class="card mb-4">
+                <div class="card-body">
+                    <form method="POST">
+                        {% csrf_token %}
+                        {{ form.as_p }}
+                        <button type="submit" class="btn btn-md rounded font-sm hover-up">Save Changes</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock content %}

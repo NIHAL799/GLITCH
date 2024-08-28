@@ -1,0 +1,325 @@
+{% extends "user_side/base2.html" %}
+{% load static %}
+{% block title %}
+Shop All
+{% endblock title %}
+{% block content %}
+
+<style>
+ 
+input[type="checkbox"] {
+    display: none;
+}
+
+/* Style for the label when the checkbox is checked */
+input[type="checkbox"]:checked + label {
+    background-color: #f0f0f0; /* Background color for selected checkboxes */
+    padding: 5px;
+    border-radius: 5px;
+    font-weight: bold; /* Optional: Make the text bold */
+    border: 1px solid orange; /* Optional: Add a border to highlight the selection */
+}
+
+/* Default label styling */
+.product-filter ul li label {
+    display: block;
+    padding: 5px;
+    border-radius: 5px;
+    cursor: pointer; /* Make the label clickable */
+    background-color: #fff; /* Background color for unselected filters */
+    border: 1px solid #ddd; /* Border for unselected filters */
+}
+</style>
+
+<div class="shop-area section-padding-1 pt-100 pb-100">
+    <div class="container-fluid">
+        <div class="shop-top-bar">
+            <div class="shop-top-bar-left">
+                <div class="shop-top-show">
+                    <span>Showing 1–12 of 39 results </span>
+                </div>
+                <div class="shop-page-list">
+                    <ul>
+                        <li>Show</li>
+                        <li class="active"><a href="#">12</a></li>
+                        <li><a href="#">15</a></li>
+                        <li><a href="#">30</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="shop-top-bar-right">
+                <div class="shop-tab nav">
+                    <a href="#shop-1" class="active" data-bs-toggle="tab"><i class="dlicon ui-2_grid-45"></i></a>
+                    <a href="#shop-2" data-bs-toggle="tab"><i class="dlicon design_bullet-list-69"></i></a>
+                </div>
+                <div class="shop-filter ml-50">
+                    <a class="shop-filter-active" href="#">Filters <i class="fa fa-angle-down angle-down"></i> <i class="fa fa-angle-up angle-up"></i></a>
+                </div>
+                <div class="shop-short-by ml-50">
+                    <span>Sort by <i class="fa fa-angle-down angle-down"></i> <i class="fa fa-angle-up angle-up"></i></span>
+                    <ul>
+                        <li class="{% if sort_by == 'default' %}active{% endif %}"><a href="?sort_by=default{% if category_ids %}&category={{ category_ids|join:',' }}{% endif %}{% if price_ranges %}&price_range={{ price_ranges|join:',' }}{% endif %}{% if sizes %}&size={{ sizes|join:',' }}{% endif %}">Default sorting</a></li>
+                        <li class="{% if sort_by == 'popularity' %}active{% endif %}"><a href="?sort_by=popularity{% if category_ids %}&category={{ category_ids|join:',' }}{% endif %}{% if price_ranges %}&price_range={{ price_ranges|join:',' }}{% endif %}{% if sizes %}&size={{ sizes|join:',' }}{% endif %}">Popularity</a></li>
+                        <li class="{% if sort_by == 'latest' %}active{% endif %}"><a href="?sort_by=latest{% if category_ids %}&category={{ category_ids|join:',' }}{% endif %}{% if price_ranges %}&price_range={{ price_ranges|join:',' }}{% endif %}{% if sizes %}&size={{ sizes|join:',' }}{% endif %}">Sort by latest</a></li>
+                        <li class="{% if sort_by == 'price_low_to_high' %}active{% endif %}"><a href="?sort_by=price_low_to_high{% if category_ids %}&category={{ category_ids|join:',' }}{% endif %}{% if price_ranges %}&price_range={{ price_ranges|join:',' }}{% endif %}{% if sizes %}&size={{ sizes|join:',' }}{% endif %}">Sort by price: low to high</a></li>
+                        <li class="{% if sort_by == 'price_high_to_low' %}active{% endif %}"><a href="?sort_by=price_high_to_low{% if category_ids %}&category={{ category_ids|join:',' }}{% endif %}{% if price_ranges %}&price_range={{ price_ranges|join:',' }}{% endif %}{% if sizes %}&size={{ sizes|join:',' }}{% endif %}">Sort by price: high to low</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div class="product-filter-wrapper">
+            <form id="filter-form" method="GET" action="{% url 'product:all_products' %}">
+                <div class="row">
+                    <!-- Product Filter for Price -->
+                    <div class="col-md-3 col-sm-6 col-xs-12 mb-20">
+                        <div class="product-filter">
+                            <h5>Price</h5>
+                            <div class="price-filter">
+                                <ul>
+                                    <li>
+                                        <input type="checkbox" name="price_range" value="5000.00-10000.00" id="price_range_1" {% if '5000.00-10000.00' in price_ranges %}checked{% endif %}>
+                                        <label for="price_range_1">5000.00 - 10000.00</label>
+                                    </li>
+                                    <li>
+                                        <input type="checkbox" name="price_range" value="10000.00-15000.00" id="price_range_2" {% if '10000.00-15000.00' in price_ranges %}checked{% endif %}>
+                                        <label for="price_range_2">10000.00 - 15000.00</label>
+                                    </li>
+                                    <li>
+                                        <input type="checkbox" name="price_range" value="15000.00-20000.00" id="price_range_3" {% if '15000.00-20000.00' in price_ranges %}checked{% endif %}>
+                                        <label for="price_range_3">15000.00 - 20000.00</label>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+        
+                    <!-- Product Filter for Available Size -->
+                    <div class="col-md-3 col-sm-6 col-xs-12 mb-20">
+                        <div class="product-filter">
+                            <h5>Available Size</h5>
+                            <div class="product-size">
+                                <ul>
+                                    <li>
+                                        <input type="checkbox" name="size" value="7" id="size_7" {% if '7' in sizes %}checked{% endif %}>
+                                        <label for="size_7">7</label>
+                                    </li>
+                                    <li>
+                                        <input type="checkbox" name="size" value="8" id="size_8" {% if '8' in sizes %}checked{% endif %}>
+                                        <label for="size_8">8</label>
+                                    </li>
+                                    <li>
+                                        <input type="checkbox" name="size" value="9" id="size_9" {% if '9' in sizes %}checked{% endif %}>
+                                        <label for="size_9">9</label>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+        
+                    <!-- Product Filter for Categories -->
+                    <div class="col-md-3 col-sm-6 col-xs-12 mb-20">
+                        <div class="product-filter">
+                            <h5>Categories</h5>
+                            <div class="product-brands">
+                                <ul>
+                                    {% for cat in categories %}
+                                        <li>
+                                            <input type="checkbox" name="category" value="{{ cat.id }}" id="category_{{ cat.id }}" {% if cat.id|stringformat:'s' in category_ids %}checked{% endif %}>
+                                            <label for="category_{{ cat.id }}">{{ cat.category_name }}</label>
+                                        </li>
+                                    {% endfor %}
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+        
+                    <!-- Apply and Clear Filters -->
+                    <div class="col-md-3 col-sm-6 col-xs-12 mb-20">
+                        <div class="product-filter">
+                            <h5>Actions</h5>
+                            <button type="submit" class="btn btn-primary">Apply Filters</button>
+                            <a href="{% url 'product:all_products' %}" class="btn btn-secondary">Clear Filters</a>
+                        </div>
+                    </div>
+                </div>
+                                
+            </form>
+        </div>
+        
+
+
+        <div class="tab-content jump-3 pt-30">
+            <div id="shop-1" class="tab-pane active">
+                <div class="row">
+                    {% for product in products %}
+                    <div class="col-md-4 col-sm-6 col-12">
+                        <div class="product-wrap mb-50">
+                            <div class="product-img default-overlay mb-25">
+                                <a href="{% url 'product:product_details' product.id %}">
+                                    <img class="default-img" src="{{ product.product_image.url }}" alt="">
+                                    <img class="hover-img" src="{{ product.product_image2.url }}" alt="">
+                                    <span class="badge-white badge-text-black badge-left-20 badge-top-20 badge-width-height-1">12 Sold/31</span>
+                                </a>
+                                <div class="product-action product-action-position-1">
+                                    {% comment %} <a data-bs-toggle="modal" data-bs-target="#exampleModal" href="#"><i class="fa fa-eye"></i><span>Quick Shop</span></a> {% endcomment %}
+                                    <a title="Add to Wishlist" href="{% url 'wishlist:add_to_wishlist' product.id %}"><i class="fa fa-heart"></i><span>Add to Wishlist</span></a>
+                                    {% comment %} 
+                                    <a class="icon-blod" title="Add to Compare" href="#"><i class="dlicon arrows-4_compare"></i><span>Add to Compare</span></a> 
+                                    {% endcomment %}
+                                    {% comment %} 
+                                    <a title="Add to Cart" href="#"><i class="fa fa-shopping-cart"></i><span>Add to Cart</span></a> 
+                                    {% endcomment %}
+                                </div>
+                            </div>
+                            <div class="product-content-2 title-font-width-400 text-center">
+                                <h3><a href="{% url 'product:product_details' product.id %}">{{ product.product_name }}</a></h3>
+                                <div class="product-price">
+                                    {% if product.category.is_offer_available %}
+                                        <span class="old-price"><del>₹{{ product.price|floatformat:2 }}</del></span>
+                                        <span class="new-price">₹{{ product.discounted_price|floatformat:2 }}</span>
+                                        <span class="discount-percentage">Save {{ product.category.discount_percentage }}%!</span>
+                                    {% else %}
+                                        <span class="new-price">₹{{ product.price|floatformat:2 }}</span>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+            <div id="shop-2" class="tab-pane">
+                <div class="shop-list-wrap mb-70">
+                    <div class="row">
+                        <div class="col-md-4 col-sm-6 col-12">
+                            <div class="product-wrap">
+                                <div class="product-img default-overlay">
+                                    <a href="product-details.html">
+                                        <img class="default-img" src="assets/images/product/product-8.jpg" alt="">
+                                        <img class="hover-img" src="assets/images/product/product-8-2.jpg" alt="">
+                                    </a>
+                                    <div class="shop-list-quickview">
+                                        <a data-bs-toggle="modal" data-bs-target="#exampleModal" href="#"><i class="fa fa-eye"></i><span>Quick Shop</span></a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-8 col-sm-6 col-12">
+                            <div class="shop-list-content ml-20">
+                                <h3><a href="#">Checked Knit Jumpsuit</a></h3>
+                                <div class="pro-list-price">
+                                    <span>$50.00</span>
+                                </div>
+                                <p>Composition: 50% cotton,45% polyester, 5% polyamide. Filling: 100% polyester. Hood fur: 64% acrylic,23% modacrylic,13% polyester</p>
+                                <div class="product-list-action">
+                                    <a title="Add to Wishlist" href="#"><i class="fa fa-heart"></i></a>
+                                    <div class="pro-list-actioncart">
+                                        <a title="Add to cart" href="#">Add to cart</a>
+                                    </div>
+                                    <a title="Add to Compare" href="#"><i class="fa fa-files-o"></i></a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="pro-pagination-style text-center">
+                <ul>
+                    <li><a class="active" href="#">1</a></li>
+                    <li><a href="#">2</a></li>
+                    <li><a href="#"><i class="dlicon arrows-1_tail-right"></i></a></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div class="support-lists">
+    <ul>
+        <li><a href="#"><i class="dlicon ui-3_chat-46"></i></a></li>
+        <li><a href="#"><i class=" dlicon ui-3_phone"></i></a></li>
+        <li><a href="#"><i class="dlicon ui-1_email-85"></i></a></li>
+    </ul>
+</div>
+
+<!-- Modal -->
+{% comment %} <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close"><span class="dlicon ui-1_simple-remove" aria-hidden="true"></span></button>
+            </div>
+            <div class="modal-body">
+                <div class="row g-0">
+                    <div class="col-lg-6 col-md-12 col-sm-12 col-xs-12">
+                        <div class="quickview-slider-active owl-carousel">
+                            <a class="img-popup" href="assets/images/product/quickview-1.jpg"><img src="assets/images/product/quickview-1.jpg" alt=""><span>sold uot</span></a>
+                            <a class="img-popup" href="assets/images/product/quickview-2.jpg"><img src="assets/images/product/quickview-2.jpg" alt=""><span>sold uot</span></a>
+                        </div>
+                        <!-- Thumbnail Large Image End -->
+                    </div>
+                    <div class="col-lg-6 col-md-12 col-sm-12 col-xs-12">
+                        <div class="product-details-content">
+                            <div class="pro-dec-next-prev">
+                                <a class="prev" href="#"><i class="dlicon arrows-1_tail-left"></i></a>
+                                <a class="next" href="#"><i class="dlicon arrows-1_tail-right"></i></a>
+                            </div>
+                            <h2 class="uppercase">Quilted parka with hood</h2>
+                            <h3>$49.00</h3>
+                            <div class="product-details-peragraph">
+                                <p>Donec accumsan auctor iaculis. Sed suscipit arcu ligula, at egestas magna molestie a. Proin ac ex maximus, ultrices justo eget, sodales orci. Aliquam libero ac turpis pharetra, in vehicula scelerisque. Vestibulum ut sem laoreet, feugiat tellus at, hendrerit arcu.</p>
+                            </div>
+                            <div class="product-details-action-wrap">
+                                <div class="product-details-quality">
+                                    <div class="cart-plus-minus">
+                                        <input class="cart-plus-minus-box" type="text" name="qtybutton" value="2">
+                                    </div>
+                                </div>
+                                <div class="product-details-cart">
+                                    <a title="Add to cart" href="#">Add to cart</a>
+                                </div>
+                                <div class="product-details-wishlist">
+                                    <a title="Add to wishlist" href="#"><i class="fa fa-heart"></i></a>
+                                </div>
+                                <div class="product-details-compare">
+                                    <a title="Add to compare" href="#"><i class="dlicon arrows-4_compare"></i></a>
+                                </div>
+                            </div>
+                            <div class="product-details-info">
+                                <a href="#"><i class="dlicon location_pin"></i>Store availability</a>
+                                <a href="#"><i class="dlicon envir_car"></i>Delivery and return</a>
+                                <a href="#"><i class="dlicon design_measure-17"></i>Size Guide</a>
+                            </div>
+                            <div class="product-details-meta">
+                                <span>SKU: REF. LA-140</span>
+                                <span>Categories: <a href="#">Fashions</a>, <a href="#">Main 01</a>, <a href="#">Main 02</a></span>
+                                <span>Tags: <a href="#">Blazer</a>, <a href="#">chair</a>, <a href="#">Coat</a>, <a href="#">dress</a>, <a href="#">light</a>, <a href="#">Living</a>, <a href="#">Main 01</a></span>
+                            </div>
+                            <div class="social-icon-style-3">
+                                <a class="facebook" href="#"><i class="fa fa-facebook"></i></a>
+                                <a class="twitter" href="#"><i class="fa fa-twitter"></i></a>
+                                <a class="linkedin" href="#"><i class="fa fa-linkedin"></i></a>
+                                <a class="pinterest" href="#"><i class="fa fa-pinterest-p"></i></a>
+                                <a class="google-plus" href="#"><i class="fa fa-google-plus"></i></a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div> {% endcomment %}
+<!-- Modal end -->
+</div>
+
+{% endblock content %}
+
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        document.getElementById('sort_by').addEventListener('change', function() {
+            document.getElementById('filter-form').submit();
+        });
+    });
+    </script>

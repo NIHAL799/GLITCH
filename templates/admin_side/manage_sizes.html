@@ -1,0 +1,58 @@
+{% extends 'admin_side/base.html' %}
+{% load static %}
+{% block content %}
+{% for message in messages %}
+<div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+  <strong></strong>{{ message }}
+  <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+</div>
+{% endfor %}
+
+<section class="content-main">
+    <div class="row">
+        <div class="col-6">
+            <div class="content-header">
+                <h2 class="content-title">Manage Sizes and Stocks for {{ product.product_name }}</h2>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-lg-6">
+            <div class="card mb-4">
+                <div class="card-body">
+                    <form method="POST" action="{% url 'product:manage_sizes' product.id %}" class="stock-form">
+                        {% csrf_token %}
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>Size</th>
+                                    <th>Stock</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for size in sizes %}
+                                <tr>
+                                    <td>{{ size.size }}</td>
+                                    <td>
+                                        <input type="number" name="stocks" class="form-control" value="{{ size.stock }}">
+                                        <input type="hidden" name="size_ids" value="{{ size.id }}">
+                                    </td>
+                                    <td>
+                                        <!-- No need for separate edit/save button -->
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                        <button type="submit" class="btn btn-md rounded font-sm hover-up">Save Changes</button>
+                    </form>
+                    <a href="{% url 'product:add_size' product.id %}" class="btn btn-md rounded font-sm hover-up">Add Sizes and Stocks</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+{% endblock content %}

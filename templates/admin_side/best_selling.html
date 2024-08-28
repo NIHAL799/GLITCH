@@ -1,0 +1,72 @@
+{% extends 'admin_side/base.html' %}
+{% load static %}
+{% block content %}
+
+{% for message in messages %}
+<div class="alert alert-{{message.tags}} alert-dismissible fade show" role="alert">
+  <strong></strong>{{message}}
+  <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+</div>
+{% endfor %}
+<section class="content-main">
+    <div class="card">
+        <ul class="nav nav-tabs" role="tablist">
+            <li class="nav-item">
+                <a class="nav-link active" data-bs-toggle="tab" href="#menu1">Best selling products</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" data-bs-toggle="tab" href="#menu2">Best selling categories</a>
+            </li>
+
+        </ul>
+        <div class="tab-content">
+            <div id="menu1" class="container tab-pane active"><br>
+                <h3>Best Selling Products</h3>
+                <div class="row">
+                    {% for product in products %}
+                        <div class="col-xl-3 col-lg-4 col-md-6"> 
+                            <div class="card card-product-grid">
+                                <a href="#" class="img-wrap">
+                                    <img src="{{ product.product_image.url }}" alt="Product">
+                                </a> 
+                                <div class="info-wrap">
+                                    <div class="dropdown float-end">
+                                        <a href="{% url "product:admin_edit_best" product.id %}" class="btn btn-sm btn-brand rounded">
+                                            <i class="material-icons md-edit mr-5"></i>Edit
+                                        </a>
+                                        <div class="dropdown-menu dropdown-menu-end">
+                                            <a class="dropdown-item" href="/admin/edit-pro?id={{ product.product__id }}">Edit info</a>
+                                        </div>
+                                    </div>
+                                    {% comment %} <a href="{% url 'product_detail' product.id %}" class="title">{{ product.name }}</a> {% endcomment %}
+                                    <div class="price mt-1">RS. {{ product.price }}</div> <!-- price-wrap.// -->
+                                    <div class="category">Category: {{ product.category.category_name }}</div>
+                                </div>
+                            </div> <!-- card-product  end// -->
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+
+            <div id="menu2" class="container tab-pane fade"><br>
+                <h3>Best Selling Categories</h3>
+                <div class="row">
+                    {% for category in categories %}
+                        <div class="col-xl-3 col-lg-4 col-md-6">
+                            <div class="card card-category-grid">
+                                <a href="#" class="img-wrap">
+                                    <img src="{{ MEDIA_URL }}{{ category.cat_image.url }}" alt="Category Image">
+                                    
+                                </a>
+                                <div class="info-wrap">
+                                    <a href="#" class="title">{{ category.category_name }}</a>
+                                </div>
+                            </div> <!-- card-category  end// -->
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

@@ -1,0 +1,122 @@
+{% extends "user_side/base2.html" %}
+
+{% block content %}
+<div>
+    {% for message in messages %}
+    <p class="abc" style="text-align:center;color:red; margin-left:-265px">{{ message }}</p>
+    {% endfor %}
+</div>
+<div class="login-register-area pt-95 pb-100">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-6 col-md-6">
+                <div class="login-register-wrap register-wrap">
+                    <h3> <i class="fa fa-user-o"></i> Register</h3>
+                    <div class="login-register-form">
+                        <form action="{% url 'user:user_signup' %}" method="post">
+                            {% csrf_token %}
+                            <div class="sin-login-register">
+                                <label>First name <span>*</span></label>
+                                <input value="{{ form.first_name.value|default_if_none:'' }}" type="text" name="first_name">
+                                {% if form.first_name.errors %}
+                                <ul class="error-list">
+                                    {% for error in form.first_name.errors %}
+                                        <li class="error-message">{{ error }}</li>
+                                    {% endfor %}
+                                </ul>
+                                {% endif %}
+                            </div>
+                            <div class="sin-login-register">
+                                <label>Last Name <span>*</span></label>
+                                <input value="{{ form.last_name.value|default_if_none:'' }}" type="text" name="last_name">
+                                {% if form.last_name.errors %}
+                                <ul class="error-list">
+                                    {% for error in form.last_name.errors %}
+                                        <li class="error-message">{{ error }}</li>
+                                    {% endfor %}
+                                </ul>
+                                {% endif %}
+                            </div>
+                            <div class="sin-login-register">
+                                <label>Email address <span>*</span></label>
+                                <input value="{{ form.email.value|default_if_none:'' }}" type="email" name="email">
+                                {% if form.email.errors %}
+                                <ul class="error-list">
+                                    {% for error in form.email.errors %}
+                                        <li class="error-message">{{ error }}</li>
+                                    {% endfor %}
+                                </ul>
+                                {% endif %}
+                            </div>
+                            <div class="sin-login-register">
+                                <label>Username <span>*</span></label>
+                                <input value="{{ form.username.value|default_if_none:'' }}" type="text" name="username">
+                                {% if form.username.errors %}
+                                <ul class="error-list">
+                                    {% for error in form.username.errors %}
+                                        <li class="error-message">{{ error }}</li>
+                                    {% endfor %}
+                                </ul>
+                                {% endif %}
+                            </div>
+                            <div class="sin-login-register">
+                                <label>Phone <span>*</span></label>
+                                <input value="{{ form.phone.value|default_if_none:'' }}" type="text" name="phone">
+                                {% if form.phone.errors %}
+                                <ul class="error-list">
+                                    {% for error in form.phone.errors %}
+                                        <li class="error-message">{{ error }}</li>
+                                    {% endfor %}
+                                </ul>
+                                {% endif %}
+                            </div>
+                            <div class="sin-login-register">
+                                <label>Create password <span>*</span></label>
+                                <input name="password1" placeholder="Enter your password" type="password">
+                                {% if form.password1.errors %}
+                                <ul class="error-list">
+                                    {% for error in form.password1.errors %}
+                                        <li class="error-message">{{ error }}</li>
+                                    {% endfor %}
+                                </ul>
+                                {% endif %}
+                            </div>
+                            <div class="sin-login-register">
+                                <label>Confirm password <span>*</span></label>
+                                <input name="password2" placeholder="Re-enter your password" type="password">
+                                {% if form.password2.errors %}
+                                <ul class="error-list">
+                                    {% for error in form.password2.errors %}
+                                        <li class="error-message">{{ error }}</li>
+                                    {% endfor %}
+                                </ul>
+                                {% endif %}
+                            </div>
+                            <!-- Referral Coupon Field -->
+                            <div class="sin-login-register">
+                                <label>Referral Coupon (Optional)</label>
+                                <input value="{{ form.referral_coupon.value|default_if_none:'' }}" type="text" name="referral_coupon" placeholder="Enter referral code">
+                                {% if form.referral_coupon.errors %}
+                                <ul class="error-list">
+                                    {% for error in form.referral_coupon.errors %}
+                                        <li class="error-message">{{ error }}</li>
+                                    {% endfor %}
+                                </ul>
+                                {% endif %}
+                            </div>
+                            <p>Your personal data will be used to support your experience throughout this website, to manage access to your account, and for other purposes described in our <a href="#">privacy policy</a></p>
+                            <div class="login-register-btn">
+                                <button type="submit">Register</button>
+                            </div>
+                        </form>
+                    </div>
+                    <p class="text-center mb-4">Don't have account? <a href="{% url 'user:user_login'%}">Login</a></p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock content %}
+
+

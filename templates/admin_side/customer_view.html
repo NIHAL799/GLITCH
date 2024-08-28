@@ -1,0 +1,138 @@
+{% extends 'admin_side/base.html' %}
+{% load static %}
+
+{% block title %}customer{% endblock %}
+
+{% block content %}
+{% for message in messages %}
+<div class="alert alert-{{message.tags}} alert-dismissible fade show" role="alert">
+  <strong></strong>{{message}}
+  <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+</div>
+{% endfor %}
+        <section class="content-main">
+            <div class="content-header">
+                <h2 class="content-title">Customers list</h2>
+            </div>
+            <div class="card mb-4">
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th>Customers</th>
+                                    <th>Email</th>
+                                    <th>Action</th>
+                                    {% comment %} <th>Edit</th> {% endcomment %}
+                                    {% comment %} <th class="text-end">Delete</th> {% endcomment %}
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for obj in data %}
+                                <tr>
+                                    <td width="40%">
+                                        <a href="#" class="itemside">
+                                            {% comment %} <div class="left">
+                                                <img src="{% static 'imgs\blank profile\images.png' %}" class="img-sm img-avatar" alt="Userpic">
+                                            </div> {% endcomment %}
+                                            <div class="info pl-3">
+                                                <h6 class="mb-0 title">{{obj.first_name}}</h6>
+                                                <small class="text-muted">Id :{{obj.id}}</small>
+                                            </div>
+                                        </a>
+                                    </td>
+                                    <td>{{obj.email}}</td>
+                                    <!-- <button onclick="toggleBlock({{ obj.id }}, {{ obj.is_blocked|lower }})"></button> -->
+                                    <!-- <button id="blockToggleBtn{{ obj.id }}" class="btn btn-outline-primary" onclick="toggleBlock({{ obj.id }}, {{ obj.is_blocked|lower }})"> -->
+
+                                    <td>
+                                        {% if obj.is_active %}
+                                        <a href="{% url 'superuser:block_user' obj.id %}">
+                                            <button id="blockToggleBtn{{ obj.id }}" class="btn btn-outline-primary">Block</button>
+                                        </a>
+                                        {% else %}
+                                        <a href="{% url 'superuser:unblock_user' obj.id %}">
+                                            <button id="blockToggleBtn{{ obj.id }}" class="btn btn-outline-primary">Unblock</button>
+                                        </a>
+                                        {% endif %}
+                                                    
+                                                    
+
+                                    </td>
+                                    {% comment %} 
+                                    <td>
+                                        <a href="delete/{{obj.id}}" class="btn btn-sm btn-brand rounded font-sm mt-15">Delete</a>
+                                    </td> {% endcomment %}
+                                    <script>
+                                        
+                                        function getCookie(name) {
+                                            var cookieValue = null;
+                                            if (document.cookie && document.cookie !== '') {
+                                                var cookies = document.cookie.split(';');
+                                                for (var i = 0; i < cookies.length; i++) {
+                                                    var cookie = cookies[i].trim();
+                                                    if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                                                        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                                                        break;
+                                                    }
+                                                }
+                                            }
+                                            return cookieValue;
+                                        }
+                                    
+                                        function toggleBlock(userId, isBlocked) {
+                                            var blockBtn = document.getElementById('blockToggleBtn' + userId);
+                                            isBlocked = !isBlocked;
+                                    
+                                            blockBtn.textContent = isBlocked ? 'Unblock' : 'Block';
+                                            blockBtn.classList.toggle('btn-outline-primary');
+                                            blockBtn.classList.toggle('btn-primary');
+                                    
+                                           
+                                            var csrftoken = getCookie('csrftoken');
+                                    
+                                            var url = isBlocked ? '/block/' : '/unblock/';
+                                            url += userId + '/';
+                                            fetch(url, {
+                                                method: 'POST',
+                                                headers: {
+                                                    'Content-Type': 'application/json',
+                                                    'X-CSRFToken': csrftoken
+                                                },
+                                                body: JSON.stringify({ id: userId }),
+                                            })
+                                            .then(response => response.json())
+                                            .then(data => {
+                                                if (data.success) {
+                                                    console.log('Block status updated successfully');
+                                                } else {
+                                                    console.error('Failed to update block status');
+                                                }
+                                            })
+                                            .catch((error) => {
+                                                console.error('Error:', error);
+                                            });
+                                        }
+                                    </script>
+                                    
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table> 
+                    </div>
+                </div> 
+            </div> 
+            <div class="pagination-area mt-15 mb-50">
+                <nav aria-label="Page navigation example">
+                    <ul class="pagination justify-content-start">
+                        <li class="page-item active"><a class="page-link" href="#">01</a></li>
+                        <li class="page-item"><a class="page-link" href="#">02</a></li>
+                        <li class="page-item"><a class="page-link" href="#">03</a></li>
+                        <li class="page-item"><a class="page-link dot" href="#">...</a></li>
+                        <li class="page-item"><a class="page-link" href="#">16</a></li>
+                        <li class="page-item"><a class="page-link" href="#"><i class="material-icons md-chevron_right"></i></a></li>
+                    </ul>
+                </nav>
+            </div>
+        </section> 
+        {% endblock %}
