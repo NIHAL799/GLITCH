@@ -131,7 +131,7 @@ SESSION_COOKIE_NAME = 'sessionid'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.postgresql',
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
         'NAME': 'Glitch_database',
         'USER': config('DB_USER'),
         'PASSWORD': config('PASSWORD')
