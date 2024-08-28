@@ -64,7 +64,6 @@ def checkout(request):
             order_notes = request.POST.get('order_notes', '')
             payment_method = request.POST.get('payment_method')
 
-            print('beginning')
             if not selected_address_id:
                 messages.error(request, "Please select an address.")
                 return redirect('order:checkout')
@@ -74,7 +73,6 @@ def checkout(request):
                 messages.error(request, "Selected address does not exist.")
                 return redirect('order:checkout')
             
-            print('before razrpay')
             if payment_method == 'razorpay':
                 request.session['selected_address'] = selected_address_id
                 request.session['order_notes'] = order_notes
@@ -87,10 +85,7 @@ def checkout(request):
                     receipt = receipt_maker,
                     payment_capture  = '1'
                 ))
-                print('before transaction')
                 
-                print(settings.RAZORPAY_KEY_ID)
-                print(razorpay_order['id'])
                 callback_url = 'http://127.0.0.1:8000/order/payment_success/'
 
                 context={
@@ -281,7 +276,6 @@ def checkout(request):
         return render(request, 'user_side/checkout.html', context)
 
     except Exception as e:
-        print('view')
         messages.error(request, f"An error occurred: {str(e)}")
         return redirect('order:checkout')
 
@@ -621,7 +615,6 @@ def payment_success(request):
                     razorpay_order_id=razorpay_order_id,
                     payment_status = payment_status
                 )
-                print('before cart')
                 for item in cart_items:
                     try:
                         product_size = ProductSize.objects.select_for_update().get(product=item.product, size=item.size)
@@ -648,7 +641,6 @@ def payment_success(request):
                         messages.error(request, "Product size not found.")
                         transaction.set_rollback(True)
                         return redirect('order:checkout')
-                print('before coupon')
                 if coupon_code:
                     try:
                         coupon = Coupon.objects.get(code=coupon_code)
@@ -666,7 +658,6 @@ def payment_success(request):
                         messages.error(request, "Invalid coupon code.")
                         transaction.set_rollback(True)
                         return redirect('order:checkout')
-                print('before cart delete')
                 cart_items.delete()
                 if 'discount' in request.session:
                     del request.session['discount']
@@ -675,7 +666,6 @@ def payment_success(request):
                     del request.session['selected_address']
                 if 'order_notes' in request.session:
                     del request.session['order_notes']
-                print('session delete')
             context ={
                 'order_id': order.id,
                 'payment_id':razorpay_payment_id,

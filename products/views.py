@@ -75,13 +75,11 @@ def admin_add_products(request):
             try:  
                 product = form.save(commit=False)
                 product.slug = slugify(product.product_name)
-                print(f"Price before save: {product.price}, type: {type(product.price).__name__}, repr: {repr(product.price)}")
 
                 if not product.discounted_price:
                     product.discounted_price = product.price 
 
                 product.price = Decimal(str(product.price))
-                print(f"Price after conversion: {product.price}, type: {type(product.price).__name__}, repr: {repr(product.price)}")
                 
                 count = 1
                 while Products.objects.filter(slug=product.slug).exists():
@@ -92,10 +90,8 @@ def admin_add_products(request):
                 messages.success(request, 'Product added successfully.')
                 return redirect('product:admin_product_list')
             except ValidationError as e:
-                print(f"Validation error: {e}")
                 messages.error(request, e.messages)
             except Exception as e:
-                print(f"Error saving product: {e}")
                 messages.error(request, "An unexpected error occurred. Please try again.")
         
         else:
@@ -341,12 +337,10 @@ def clear_filters(request):
     
 def resize_image(image_path, size=(800, 800)):
     if not os.path.exists(image_path):
-        print(f"File not found: {image_path}")
         return
     with Image.open(image_path) as img:
         img = img.resize(size)
         img.save(image_path)
-        print(f"Resized image saved at: {image_path}")
 
 @receiver(pre_save, sender=Products)
 def resize_product_image(sender, instance, **kwargs):

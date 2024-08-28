@@ -79,7 +79,6 @@ def user_signup(request):
             referral_coupon = form.cleaned_data.get('referral_coupon')
             request.session['referral_coupon'] = referral_coupon
             otp = generate_otp()
-            print(f'Your OTP is: {otp}')
             send_otp_email(email, otp)
             request.session['otp'] = otp
             request.session['otp_creation_time'] = time.time()
@@ -103,7 +102,6 @@ def verify_otp(request):
         otp_created_time = request.session.get('otp_creation_time')
         email = request.session.get('email')
         referral_coupon = request.session.get('referral_coupon')
-        print('Referral Coupon:', referral_coupon)
 
         if entered_otp == stored_otp and (time.time() - otp_created_time) < 300:
             form_data = request.session.get('form_data')
@@ -120,10 +118,8 @@ def verify_otp(request):
                     if referral_coupon:
                         try:
                             referrer = UserDetails.objects.get(referral_code=referral_coupon)
-                            print(f"Referrer: {referrer.email}")
 
                             wallet, created = Wallet.objects.get_or_create(user=referrer)
-                            print(f"Old Wallet Balance: {wallet.balance}")
 
                             reward_amount = 1000.00
                             wallet.balance += Decimal(reward_amount)
@@ -164,12 +160,10 @@ def verify_otp(request):
 def resend_otp(request):
     if request.method == 'POST':
         email = request.session.get('email')
-        print('Resend OTP for email:', email)
         if email:
             try:
                 user = UserDetails.objects.get(email=email)
                 otp = generate_otp()
-                print(f'{otp} is the re-sent OTP')
                 send_otp_email(user.email, otp)
                 request.session['otp'] = otp
                 request.session['otp_creation_time'] = time.time()
@@ -199,7 +193,6 @@ def user_login(request):
         try:
             user = UserDetails.objects.get(email=email)
             user = authenticate(request, email=email, password=password)
-            print(user)
             if user:
                 if not user.referral_code:
                     referral_code = generate_referral_code()
@@ -211,7 +204,6 @@ def user_login(request):
                         return redirect('user:home')
                     else:
                         otp = generate_otp()
-                        print(otp)
                         send_otp_email(email, otp)
                         request.session['otp'] = otp
                         request.session['otp_creation_time'] = time.time()
@@ -265,7 +257,6 @@ def forgot_password(request):
         user = get_object_or_404(UserDetails, email=email)
         
         otp = generate_otp()
-        print('Generated OTP:', otp)
         send_otp_email(user.email, otp)
         
         request.session['forgot_password_otp'] = otp
@@ -280,7 +271,6 @@ def forgot_password_otp(request):
     if request.method == 'POST':
         otp_entered = request.POST.get('otpEntered')
         stored_otp = request.session.get('forgot_password_otp')
-        print('stored_otp',stored_otp)
         otp_creation_time = request.session['forgot_password_otp_creation_time']
         current_time = time.time()
         if otp_entered == stored_otp and (current_time - otp_creation_time) <=120:
@@ -306,7 +296,6 @@ def forgot_password_resend_otp(request):
             user = UserDetails.objects.get(id=user_id)
             otp = generate_otp()
             send_otp_email(user.email,otp)
-            print('otp is',otp)
             request.session['forgot_password_otp'] = otp
             request.session['forgot_password_otp_creation_time'] = time.time()
             
@@ -323,9 +312,7 @@ def reset_password(request):
         password1 = request.POST.get('new_password')
         password2 = request.POST.get('confirm_password')
         user_id = request.session.get('forgot_password_user_id')
-        print(user_id)
-        print(password1)
-        print(password2)
+ 
         try:
             user = UserDetails.objects.get(id=user_id)
 

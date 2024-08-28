@@ -86,7 +86,6 @@ def dashboard(request):
         chart_month[month] += int(order.payment_after_discount * order.quantity)
         orders_count[month] += 1
     
-    print(month, chart_month, orders_count)
     for user in UserDetails.objects.all():
         month = user.date_joined.month - 1
         new_users[month] += 1

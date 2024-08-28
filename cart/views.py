@@ -21,9 +21,7 @@ def add_to_cart(request, product_id):
     size = request.POST.get('size')
     quantity = int(request.POST.get('qtybutton', 1))
 
-    print(f"Product ID: {product_id}")
-    print(f"Size: {size}")
-    print(f"Quantity: {quantity}")
+    
 
     
     if not size:
@@ -55,7 +53,6 @@ def add_to_cart(request, product_id):
 
     try:
         cart_item = CartItem.objects.get(cart=cart, product=product, user=user, size=size)
-        print(f"Existing CartItem found: {cart_item.id} - Old Quantity: {cart_item.quantity}")
         new_quantity = cart_item.quantity + quantity
         if new_quantity > available_stock:
             messages.info(request, f"Only {available_stock} in stock.")
@@ -64,7 +61,6 @@ def add_to_cart(request, product_id):
         cart_item.save()
         messages.success(request, "Item quantity updated in cart.")
     except CartItem.DoesNotExist:
-        print("Creating new CartItem.")
         CartItem.objects.create(
             cart=cart,
             product=product,

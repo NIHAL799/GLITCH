@@ -25,11 +25,9 @@ def wallet_recharge(request):
     if request.method == 'POST':
         amount = request.POST.get('amount')
         if not amount or not amount.isdigit() or int(amount) <= 0:
-            print('amount is missing')
             messages.error(request, 'Please enter a valid amount.')
             return redirect('user:my_account')
         amount = Decimal(amount)
-        print('amount', amount)
         receipt_maker ='text'
         notes = {'order-type':'Recharge for waller'}
         razorpay_order = razorpay_client.order.create(dict(
@@ -60,8 +58,7 @@ def payment_success(request):
             razorpay_payment_id = request.POST.get('razorpay_payment_id')
             razorpay_order_id = request.POST.get('razorpay_order_id')
             razorpay_signature = request.POST.get('razorpay_signature')
-            print('payment_id',razorpay_payment_id)
-            print('razorpay_signature',razorpay_signature)
+        
 
             client = razorpay.Client(auth=(settings.RAZORPAY_KEY_ID, settings.RAZORPAY_KEY_SECRET))
 
@@ -93,7 +90,6 @@ def payment_success(request):
             return redirect('user:my_account')
         
         except Exception as e:
-            print(f'Error-------------------------: {e}--------------------------')
             messages.error(request, 'Payment verification failed!')
             return redirect('user:my_account')
         

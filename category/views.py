@@ -79,15 +79,12 @@ def category_edit(request, id):
         end_date = request.POST.get('end_date')
         cat_image = request.FILES.get('cat_image')
         offer = request.POST.get('is_offer_available')
-        print(offer)
         category_discount = request.POST.get('discount_percentage')
 
         if offer == 'True':
             products = Products.objects.filter(soft_deleted=False, is_available=True).annotate(total_stock=Count('sizes__stock')).filter(total_stock__gt=0)
-            print('offer aanerereeeeeeeee')
             for product in products:
                 product.discounted_price = product.calculate_discounted_price()
-                print(product.discounted_price)
                 product.save()
             if not end_date:
                 messages.error(request, 'Select a end date for offer.')
@@ -113,7 +110,6 @@ def category_edit(request, id):
         category.description = description
         category.minimum_amount = minimum_amount
         if offer == 'True':
-            print(end_date)
             category.end_date = end_date
         category.cat_image = cat_image
         category.is_offer_available = offer
@@ -167,12 +163,10 @@ def shop_by_category(request, category_name):
     if category.is_offer_available == True:
         for product in products:
             product.discounted_price = product.calculate_discounted_price()
-            print('product.discounted_price',product.discounted_price)
             product.save()
     else:
         for product in products:
             product.discounted_price = product.price
-            print('product.discounted_price',product.discounted_price)
             product.save()
 
     breadcrumbs = [
