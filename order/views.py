@@ -379,14 +379,12 @@ def cancel_order(request, item_id):
 def order_list_admin(request):
     search_query = request.GET.get('search', '')
     sort_by = request.GET.get('sort_by', '-id')  
-
     orders = Order.objects.all().order_by('-created_at')
     if search_query:
         orders = orders.filter(
             Q(address__first_name__icontains=search_query) |
             Q(address__last_name__icontains=search_query)
         )
-
     try:
         orders = orders.order_by(sort_by)
     except FieldError:
@@ -395,7 +393,6 @@ def order_list_admin(request):
     context = {
         'orders': orders,
     }
-
     return render(request, 'admin_side/orders.html', context)
 
 def update_order_status(request):

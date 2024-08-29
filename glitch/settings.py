@@ -131,7 +131,7 @@ SESSION_COOKIE_NAME = 'sessionid'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'Glitch_database',
+        'NAME': config('DB_NAME'),
         'USER': config('DB_USER'),
         'PASSWORD': config('PASSWORD'),
         'HOST': 'localhost',
@@ -199,8 +199,8 @@ EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
-EMAIL_HOST_USER = 'nihaladam000@gmail.com'
-EMAIL_HOST_PASSWORD = 'otly rkuo eayp mkgi'
+EMAIL_HOST_USER = config('EMAIL_HOST_USER')
+EMAIL_HOST_PASSWORD = config('EMAIL_HOST_PASSWORD')
 
 AUTHENTICATION_BACKENDS = (
     'user.backends.EmailBackend', 
@@ -247,5 +247,8 @@ SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET = config('SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET')
 
 RAZORPAY_KEY_ID = 'rzp_test_QnRUOjTnTkpXs3'
 RAZORPAY_KEY_SECRET = 'Bbhvutv7VINKKNtktqd8r8Rj'
+
+# RAZORPAY_KEY_ID = config('RAZORPAY_KEY_ID')
+# RAZORPAY_KEY_SECRET = config('RAZORPAY_KEY_SECRET')
 
 # SOCIALACCOUNT_QUERY_EMAIL= True
