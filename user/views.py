@@ -361,29 +361,40 @@ def edit_profile(request):
         lname = request.POST.get('lname')
         phone = request.POST.get('phone')
         email = request.POST.get('email')
-        curnt_pass = request.POST.get('current_password')
-        pass1 = request.POST.get('password1')
-        pass2 = request.POST.get('password2')
-        if check_password(curnt_pass, user.password):
-            if pass1 == pass2:
-                user.email = email 
-                user.phone = phone
-                user.first_name = fname
-                user.last_name = lname
-                user.set_password(pass1)
-                update_session_auth_hash(request,user)
-                user.save()
-            else:
-                messages.error(request,"Password doesn't match")
-                return redirect('user:edit_profile')
+    
+        if fname and lname and phone and email:
+        
+            user.email = email 
+            user.phone = phone
+            user.first_name = fname
+            user.last_name = lname
+            user.save()
+        
         else:
-            messages.error(request,'Your password is not matching to your old password')
+            messages.error(request,'Please fill all details')
             return redirect('user:edit_profile')
         messages.success(request,'Details updated successfully.')
         return redirect('user:my_account')
     return render(request,'user_side/my_account.html')
 
-
+def edit_password(request):
+    if request.method == 'POST':
+        curnt_pass = request.POST.get('current_password')
+        pass1 = request.POST.get('password1')
+        pass2 = request.POST.get('password2')
+        user = UserDetails.objects.get(email=request.user.email)
+        if check_password(curnt_pass, user.password):
+            if pass1 == pass2:
+                user.set_password(pass1)
+                update_session_auth_hash(request,user)
+                user.save()
+            else:
+                messages.error(request,"Password doesn't match")
+                return redirect('user:edit_password')
+        else:
+            messages.error(request,'Your password is not matching to your old password')
+            return redirect('user:edit_password')
+    return render(request,'user_side/my_account.html')
 
 def add_address(request):
     if request.method == "POST":
@@ -407,7 +418,11 @@ def edit_address(request, address_id):
         form = AddressForm(request.POST, instance=address)
         if form.is_valid():
             form.save()
-            return redirect('user:profile')  # Redirect to the profile page after editing address
+            messages.success(request,'Your Address editedsuccessfully')
+            return redirect('user:my_account') 
+        else:
+            messages.error(request,'Check the errors given below')
+            return redirect('user:edit_address')
     else:
         form = AddressForm(instance=address)
     return render(request, 'user_side/edit_address.html', {'form': form})

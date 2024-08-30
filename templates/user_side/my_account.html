@@ -218,6 +218,13 @@ My Account
                                         <input value='{{ user.email }}' name='email' type="email" id="email" />
                                     </div>
                                     
+                                    
+                                    <div class="single-input-item">
+                                        <button class="check-btn sqr-btn " type="submit">Save Changes</button>
+                                    </div>
+                                </form>
+                                <form method='post' action="{% url "user:edit_password" %}">
+                                    {% csrf_token %}
                                     <fieldset>
                                         <legend>Password change</legend>
                                         <div class="single-input-item">
@@ -240,7 +247,7 @@ My Account
                                         </div>
                                     </fieldset>
                                     <div class="single-input-item">
-                                        <button class="check-btn sqr-btn " type="submit">Save Changes</button>
+                                        <button class="check-btn sqr-btn " type="submit">Save Password</button>
                                     </div>
                                 </form>
                             </div>

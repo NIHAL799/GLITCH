@@ -550,7 +550,6 @@ def reject_return(request, item_id):
     return redirect('order:order_detail_admin', order_id=item.order.id)
 
 
-logger = logging.getLogger(__name__)
 
 @csrf_exempt
 def payment_success(request):
@@ -671,13 +670,10 @@ def payment_success(request):
             return render(request, "user_side/order_confirmed.html", context)
 
         except json.JSONDecodeError:
-            logger.error('JSONDecodeError: Invalid JSON')
             return JsonResponse({'success': False, 'message': 'Invalid JSON'}, status=400)
         except razorpay.errors.SignatureVerificationError as e:
-            logger.error(f'Razorpay SignatureVerificationError: {str(e)}')
             return JsonResponse({'success': False, 'message': str(e)}, status=400)
         except Exception as e:
-            logger.error(f'Unhandled error: {str(e)}')
             return JsonResponse({'success': False, 'message': 'An unexpected error occurred.'}, status=500)
     context = {
         'razorpay_key' : settings.RAZORPAY_KEY_ID,
@@ -749,7 +745,6 @@ def retry_payment_success(request):
             }
             return render(request, "user_side/order_confirmed.html", context)
         except json.JSONDecodeError:
-            logger.error('JSONDecodeError: Invalid JSON')
             return JsonResponse({'success': False, 'message': 'Invalid JSON'}, status=400)
         
     context = {

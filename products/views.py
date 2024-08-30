@@ -64,7 +64,6 @@ def admin_product_list(request):
 
     return render(request,'admin_side/product_list.html',context)
 
-logger = logging.getLogger(__name__)
 @cache_control(no_cache=True, must_revalidate=True, no_store=True)
 def admin_add_products(request):
     if 'username' not in request.session:
