@@ -5,7 +5,7 @@ from django.conf import settings
 from django.utils import timezone
 from user.models import UserDetails
 from django.utils.translation import gettext_lazy as _
-
+from coupons.models import Coupon
 
 
 
@@ -33,6 +33,7 @@ class Order(models.Model):
     razorpay_order_id = models.CharField(max_length=255, blank=True, null=True)
     razorpay_payment_id = models.CharField(max_length=255, blank=True, null=True)
     razorpay_signature = models.CharField(max_length=255, blank=True, null=True)
+    coupon = models.ForeignKey(Coupon, on_delete=models.SET_NULL, null=True, blank=True)
 
 
     def __str__(self):

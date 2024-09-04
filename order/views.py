@@ -18,8 +18,8 @@ from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 from wallet.models import Wallet,Transaction
 import json
-import requests
-import logging
+from django.utils.functional import SimpleLazyObject
+
 from decimal import Decimal
 from fpdf import FPDF
 from io import BytesIO
@@ -34,8 +34,8 @@ razorpay_client = razorpay.Client(auth=(settings.RAZORPAY_KEY_ID, settings.RAZOR
 @csrf_exempt
 def checkout(request):
     user = request.user
-    user_details = get_object_or_404(UserDetails, id=user.id)
     delivery_charge = 110
+    user_id = user.id
 
     try:
         cart = Cart.objects.get(user=user)
@@ -58,9 +58,11 @@ def checkout(request):
         discount_amount = total_amount * (Decimal(discount_percentage) / Decimal(100)) * 100
         final_total = (total_amount - discount_amount) + delivery_charge
         coupon_code = request.session.get('coupon_code', '')
+        coupon = Coupon.objects.filter(code=coupon_code).first()
 
         if request.method == 'POST':
             selected_address_id = request.POST.get('selected_address')
+            
             order_notes = request.POST.get('order_notes', '')
             payment_method = request.POST.get('payment_method')
 
@@ -74,7 +76,8 @@ def checkout(request):
                 return redirect('order:checkout')
             
             if payment_method == 'razorpay':
-                request.session['selected_address'] = selected_address_id
+                request.session['selected_address_id'] = selected_address_id
+                print('selected_address_id',selected_address_id)
                 request.session['order_notes'] = order_notes
                 notes = {'order-type':'basic order from the website'}
                 receipt_maker = 'text'
@@ -86,8 +89,8 @@ def checkout(request):
                     payment_capture  = '1'
                 ))
                 
-                callback_url = 'http://127.0.0.1:8000/order/payment_success/'
-
+                callback_url = f'http://127.0.0.1:8000/order/payment_success/?address_id={selected_address_id}&user_id={user_id}'
+                print('user_iddddddddddd',user_id)
                 context={
                     'key' : settings.RAZORPAY_KEY_ID,
                     'amount': int(final_total * 100),
@@ -115,6 +118,7 @@ def checkout(request):
                         total_amount=total_amount,
                         payable_amount=final_total,
                         payment_status='paid',
+                        coupon=coupon,
                     )
 
                     for item in cart_items:
@@ -194,7 +198,8 @@ def checkout(request):
                             order_notes=order_notes,
                             payment_method=payment_method,
                             total_amount=total_amount,
-                            payable_amount=final_total
+                            payable_amount=final_total,
+                            coupon=coupon,
                         )
 
                         for item in cart_items:
@@ -377,6 +382,13 @@ def cancel_order(request, item_id):
 
 
 def order_list_admin(request):
+    user = request.user
+    print(user)
+    if not user.is_authenticated:
+        return redirect('superuser:admin_login')
+    elif not user.is_superuser:
+        return redirect('superuser:admin_login')
+
     search_query = request.GET.get('search', '')
     sort_by = request.GET.get('sort_by', '-id')  
     orders = Order.objects.all().order_by('-created_at')
@@ -396,6 +408,12 @@ def order_list_admin(request):
     return render(request, 'admin_side/orders.html', context)
 
 def update_order_status(request):
+    user = request.user
+    if not user.is_authenticated:
+        return redirect('superuser:admin_login')
+    elif not user.is_superuser:
+        return redirect('superuser:admin_login')
+
     if request.method == 'POST':
         item_id = request.POST.get('OrderID')
         status = request.POST.get('status')
@@ -451,14 +469,8 @@ def update_order_status(request):
                 product_size.save()
 
                 order = item.order
-                coupon = order.coupon  
-                if coupon:
-                    total_order_amount = order.total_amount
-                    discount_percentage = coupon.offer_percentage
-                    discount_amount = (total_order_amount * discount_percentage) / 100
-                    refund_amount = item.price * item.quantity - discount_amount
-                else:
-                    refund_amount = item.price * item.quantity
+                
+                refund_amount = item.price * item.quantity
 
                 user = item.order.user
                 wallet = Wallet.objects.get(user=user)
@@ -511,6 +523,12 @@ def add_address_checkout(request):
 
 
 def order_detail_admin(request, order_id):
+    user = request.user
+    if not user.is_authenticated:
+        return redirect('superuser:admin_login')
+    elif not user.is_superuser:
+        return redirect('superuser:admin_login')
+
     order = get_object_or_404(Order, id=order_id)
     order_items = OrderItem.objects.filter(order=order)
     total_amount = sum(item.price * item.quantity for item in order_items)
@@ -532,9 +550,17 @@ def return_request(request, item_id):
     return redirect('order:order_detail', order_id=item.order.id)
 
 def accept_return(request, item_id):
-    if 'username' not in request.session:
+
+    user = request.user
+    if not user.is_authenticated:
         return redirect('superuser:admin_login')
+    elif not user.is_superuser:
+        return redirect('superuser:admin_login')
+
+    
     item = get_object_or_404(OrderItem, id=item_id)
+    
+    
     item.status = 'return_accepted'
     item.save()
     messages.success(request, 'Return accepted successfully')
@@ -549,17 +575,21 @@ def reject_return(request, item_id):
     messages.success(request, 'Return rejected successfully')
     return redirect('order:order_detail_admin', order_id=item.order.id)
 
+import traceback
 
 
 @csrf_exempt
 def payment_success(request):
     if request.method == "POST":
-        user = request.user
+        print('Request GET data:', request.GET)
+        user_id = request.GET.get('amp;user_id')
+        print('user_iddddddddddd',user_id)
+        user = UserDetails.objects.get(id=user_id)
 
         try:
-            razorpay_payment_id = request.POST.get('razorpay_payment_id', None)
-            razorpay_order_id = request.POST.get('razorpay_order_id', None)
-            razorpay_signature = request.POST.get('razorpay_signature', None)
+            razorpay_payment_id = request.POST.get('razorpay_payment_id')
+            razorpay_order_id = request.POST.get('razorpay_order_id')
+            razorpay_signature = request.POST.get('razorpay_signature')
 
             client = razorpay.Client(auth=(settings.RAZORPAY_KEY_ID, settings.RAZORPAY_KEY_SECRET))
             try:
@@ -576,7 +606,8 @@ def payment_success(request):
                 return JsonResponse({'status': 'failure'}, status=400)
 
       
-            selected_address_id = request.session.get('selected_address')
+            selected_address_id = request.GET.get('address_id')
+            print('selected_address_id',selected_address_id)
             order_notes = request.session.get('order_notes')
             address = Address.objects.filter(id=selected_address_id, user=user).first()
 
@@ -600,6 +631,7 @@ def payment_success(request):
             discount_amount = total_amount * (Decimal(discount_percentage) / Decimal(100))
             final_total = total_amount - discount_amount
             coupon_code = request.session.get('coupon_code', '')
+            coupon = Coupon.objects.filter(code=coupon_code).first()
             with transaction.atomic():
                 order = Order.objects.create(
                     user=user,
@@ -609,7 +641,8 @@ def payment_success(request):
                     total_amount=total_amount,
                     payable_amount=final_total,
                     razorpay_order_id=razorpay_order_id,
-                    payment_status = payment_status
+                    payment_status = payment_status,
+                    coupon=coupon,
                 )
                 for item in cart_items:
                     try:
@@ -674,6 +707,8 @@ def payment_success(request):
         except razorpay.errors.SignatureVerificationError as e:
             return JsonResponse({'success': False, 'message': str(e)}, status=400)
         except Exception as e:
+            print(traceback.format_exc()) 
+
             return JsonResponse({'success': False, 'message': 'An unexpected error occurred.'}, status=500)
     context = {
         'razorpay_key' : settings.RAZORPAY_KEY_ID,
@@ -800,17 +835,17 @@ def download_invoice(request, order_id):
     pdf = InvoicePDF()
     pdf.add_page()
     pdf.chapter_title(f'Invoice for Order {order.id}')
-    pdf.chapter_body(f'Order Date: {order.created_at}\n'
+    pdf.chapter_body(f'Order Date: {order.created_at.strftime("%Y-%m-%d")}\n'
                      f'Address: {order.address.street_address}, {order.address.apartment_address}, {order.address.city}, {order.address.country}, {order.address.postcode}\n'
                      f'Order Status: {order.payment_status}\n'
                      f'Total Amount: ${order.total_amount}\n'
-                     f'Payable Amount: ${order.payable_amount}\n'
+                     f'Amount After Discount: ${order.payable_amount}\n'
                      f'Payment Method: {order.payment_method}')
 
     pdf.add_order_items(items)
 
     pdf_output = BytesIO()
-    pdf_content = pdf.output(dest='S').encode('latin1')  # Generate the PDF content
+    pdf_content = pdf.output(dest='S').encode('latin1')  
     pdf_output.write(pdf_content)
 
 

@@ -88,28 +88,14 @@
                     <a class="menu-link" href="{% url 'superuser:customer_view' %}"> <i class="icon material-icons md-store"></i>
                         <span class="text">Customers</span>
                     </a>
-                    <div class="submenu">
-                        <a href="{% url 'superuser:customer_view' %}">Customers_list</a>
-                    </div>
+                    
                 </li>
                 
                 <li class="menu-item has-submenu">
                     <a class="menu-link" href="{% url 'category:category_list' %}"> <i class="icon material-icons md-shopping_bag"></i>
                         <span class="text">Category</span>
                     </a>
-                    <div class="submenu">
-                        <h6>Brand & Category</h6>
-                        {% comment %} <a href="{% url 'category' %}">Categories</a>
-                        <a href="{% url 'admin_brands' %}">Brands</a><br><br> {% endcomment %}
-                        <h6>Products</h6>
-                        
-                        {% comment %} <a href="{% url 'product:admin_product_list' %}">Product List</a>
-                        <a href="{% url 'product:admin_add_products' %}">Add product</a>
-                        <h6>Variants</h6> {% endcomment %}
-                        {% comment %} <a href="{% url 'product_attributes' %}">Attributes</a>
-                        <a href="{% url 'variant_add' %}">Add Variant</a>
-                        <a href="{% url 'variant_list' %}">variant list</a> {% endcomment %}
-                    </div>
+                    
                 </li>
                 <li class="menu-item has-submenu">
                     <a class="menu-link" href="{% url 'product:admin_product_list' %}"> <i class="icon material-icons md-store"></i>

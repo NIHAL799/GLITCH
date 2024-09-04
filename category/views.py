@@ -12,8 +12,12 @@ from datetime import timedelta
     #======================================= Admin Category management =================================== #
 
 def category_list(request):
-    if 'username' not in request.session:
+    user = request.user
+    if not user.is_authenticated:
         return redirect('superuser:admin_login')
+    elif not user.is_superuser:
+        return redirect('superuser:admin_login')
+
     if request.method == 'POST':
         category_name = request.POST.get('cat_name')
         catog = Category(category_name = category_name)

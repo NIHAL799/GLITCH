@@ -57,8 +57,13 @@ def product_details(request, id):
 
 @cache_control(no_cache=True,must_revalidate=True,no_store=True)
 def admin_product_list(request):
-    if 'username' not in request.session:
+
+    user = request.user
+    if not user.is_authenticated:
         return redirect('superuser:admin_login')
+    elif not user.is_superuser:
+        return redirect('superuser:admin_login')
+    
     products = Products.objects.all().order_by('-created_date')
     context = {'products':products }
 
@@ -303,6 +308,10 @@ def all_products(request):
             messages.warning(request, 'Filtered sizes are not in stock')
             products = Products.objects.none()
 
+    if sort_by == 'name_a_to_z':
+        products = Products.objects.all().order_by('product_name')
+    elif sort_by == 'name_z_to_a':
+        products = Products.objects.all().order_by('-product_name')
 
     if sort_by == 'popularity':
         products = products.order_by('-popularity')

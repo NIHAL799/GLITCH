@@ -98,6 +98,8 @@
                         <th class="align-middle" scope="col">Billing Name</th>
                         <th class="align-middle" scope="col">Date</th>
                         <th class="align-middle" scope="col">Payment Method</th>
+                        <th class="align-middle" scope="col">Total Amount</th>
+                        <th class="align-middle" scope="col">Payable Amount</th>
                         <th class="align-middle" scope="col">Actions</th>
                     </tr>
                 </thead>
@@ -116,6 +118,8 @@
                         <td>
                             <i class="material-icons md-payment font-xxl text-muted mr-5"></i> {{ order.payment_method }}
                         </td>
+                        <td>{{ order.total_amount }}</td>
+                        <td>{{ order.payable_amount }}</td>
                         <td><a href="{% url 'order:order_detail_admin' order.id %}" class="fw-bold">View</a></td>
                     </tr>
                     {% endfor %}

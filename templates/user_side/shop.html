@@ -63,6 +63,12 @@ input[type="checkbox"]:checked + label {
                         <li class="{% if sort_by == 'latest' %}active{% endif %}"><a href="?sort_by=latest{% if category_ids %}&category={{ category_ids|join:',' }}{% endif %}{% if price_ranges %}&price_range={{ price_ranges|join:',' }}{% endif %}{% if sizes %}&size={{ sizes|join:',' }}{% endif %}">Sort by latest</a></li>
                         <li class="{% if sort_by == 'price_low_to_high' %}active{% endif %}"><a href="?sort_by=price_low_to_high{% if category_ids %}&category={{ category_ids|join:',' }}{% endif %}{% if price_ranges %}&price_range={{ price_ranges|join:',' }}{% endif %}{% if sizes %}&size={{ sizes|join:',' }}{% endif %}">Sort by price: low to high</a></li>
                         <li class="{% if sort_by == 'price_high_to_low' %}active{% endif %}"><a href="?sort_by=price_high_to_low{% if category_ids %}&category={{ category_ids|join:',' }}{% endif %}{% if price_ranges %}&price_range={{ price_ranges|join:',' }}{% endif %}{% if sizes %}&size={{ sizes|join:',' }}{% endif %}">Sort by price: high to low</a></li>
+                        <li class="{% if sort_by == 'name_a_to_z' %}active{% endif %}">
+                            <a href="?sort_by=name_a_to_z{% if category_ids %}&category={{ category_ids|join:',' }}{% endif %}{% if price_ranges %}&price_range={{ price_ranges|join:',' }}{% endif %}{% if sizes %}&size={{ sizes|join:',' }}{% endif %}">Sort by name: A-Z</a>
+                        </li>
+                        <li class="{% if sort_by == 'name_z_to_a' %}active{% endif %}">
+                            <a href="?sort_by=name_z_to_a{% if category_ids %}&category={{ category_ids|join:',' }}{% endif %}{% if price_ranges %}&price_range={{ price_ranges|join:',' }}{% endif %}{% if sizes %}&size={{ sizes|join:',' }}{% endif %}">Sort by name: Z-A</a>
+                        </li>
                     </ul>
                 </div>
             </div>

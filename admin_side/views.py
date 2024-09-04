@@ -66,12 +66,11 @@ def get_most_ordered_categories_with_count():
 
 
 def dashboard(request):
-
-    if 'username' not in request.session :
+    user = request.user
+    print(user)
+    if not user.is_superuser or not user.is_authenticated:
         return redirect('superuser:admin_login')
-    
-    
-    
+
     orders = OrderItem.objects.filter(status='delivered')
     order_count = orders.count()
     revenue = (
@@ -155,16 +154,18 @@ def dashboard(request):
 
 @cache_control(no_cache=True, must_revalidate=True, no_store=True)
 def admin_login(request):
-    if 'username' in request.session:
-        return redirect('superuser:dashboard')
+    user = request.user if request.user.is_authenticated else None
     if request.method == 'POST':
         email=request.POST.get('email')
         password=request.POST.get('password')
+        if user is not None:
+            if request.user.is_authenticated:
+                logout(request)
 
-        user = auth.authenticate(email=email,password=password)
-
+        user = authenticate(email=email,password=password)
+        print(user)
         if user is not None and user.is_superuser:
-            request.session['username'] = email
+            login(request,user)
             return redirect('superuser:dashboard')
         else:
             messages.info(request,'Invalid Email or password.')
@@ -172,19 +173,23 @@ def admin_login(request):
     return render(request,"admin_side/admin_login.html")
 
 def admin_logout(request):
-    if 'username' in request.session:
-        request.session.flush()
-
+    logout(request)
+    messages.success(request, 'Logged out successfully.')
     return redirect('superuser:admin_login')
 
 #======================================= User Management =================================== #
+
 def customer_view(request):
-    if 'username' not in request.session:
+    user = request.user
+    if not user.is_authenticated:
+        return redirect('superuser:admin_login')
+    elif not user.is_superuser:
         return redirect('superuser:admin_login')
     data = UserDetails.objects.all()
     
     context = {'data':data }
     return render (request,"admin_side/customer_view.html",context)
+
 def block_user(request, user_id):
     user = get_object_or_404(UserDetails, id=user_id)
     user.is_active = False 
@@ -195,7 +200,7 @@ def unblock_user(request, user_id):
     user = get_object_or_404(UserDetails, id=user_id)
     user.is_active = True  
     user.save()
-    messages.success(request,f'{user.last_name} UnBlocked successfully')
+    messages.success(request,f'{user.username} UnBlocked successfully')
     return redirect('superuser:customer_view')
 
 
@@ -222,12 +227,8 @@ def sales_report(request):
                     'total_discount': total_discount,
                     'order_count': order_count,
                 }
-        
-        
                 return render(request, 'admin_side/sales_report.html', context)
-
         now = timezone.now()
-
         if date_filter == 'daily':
             start_date = timezone.localdate()  
             start_date = timezone.make_aware(datetime.combine(start_date, datetime.min.time()))
@@ -269,18 +270,28 @@ def sales_report(request):
         'total_discount': total_discount,
         'order_count': order_count,
     }
-    
-    
+
     return render(request, 'admin_side/sales_report.html', context)
+
+from reportlab.platypus import SimpleDocTemplate, Table, TableStyle,Paragraph,Spacer
+from reportlab.lib.styles import getSampleStyleSheet
+from reportlab.lib import colors
+from reportlab.lib.units import inch
 
 
 def download_pdf_report(request):
     response = HttpResponse(content_type='application/pdf')
     response['Content-Disposition'] = 'attachment; filename="sales_report.pdf"'
 
-    p = canvas.Canvas(response, pagesize=letter)
-    p.drawString(100, 750, "Sales Report")
-    
+    doc = SimpleDocTemplate(response, pagesize=letter)
+    elements = []
+
+    styles = getSampleStyleSheet()
+    title_style = styles['Title']  # Use the 'Title' style for the title
+    title = Paragraph("Sales Report", title_style)  # Wrap the title string in a Paragraph object
+    elements.append(title)
+    elements.append(Spacer(1, 12))  # Add space after the title
+
     orders = Order.objects.all()
     if request.GET:
         form = SalesReportFilterForm(request.GET)
@@ -289,16 +300,41 @@ def download_pdf_report(request):
                 orders = orders.filter(created_at__gte=form.cleaned_data['start_date'])
             if form.cleaned_data['end_date']:
                 orders = orders.filter(created_at__lte=form.cleaned_data['end_date'])
-    
-    y = 700
-    for order in orders:
-        p.drawString(100, y, f"Order ID: {order.id} User: {order.user.username} Total: ${order.total_amount}")
-        y -= 20
-    
-    p.showPage()
-    p.save()
-    return response
 
+    # Define the table data
+    orders = orders.order_by('id')
+    data = [['Order ID', 'User', 'Total Amount', 'Payable Amount' , 'Date']]
+    for order in orders:
+        data.append([order.id, order.user.username, f"${order.total_amount:.2f}",f"${order.payable_amount:.2f}", order.created_at.strftime('%Y-%m-%d')])
+
+    # Create the table
+    table = Table(data)
+    
+    # Add style to the table
+    style = TableStyle([
+        ('BACKGROUND', (0, 0), (-1, 0), colors.grey),
+        ('TEXTCOLOR', (0, 0), (-1, 0), colors.whitesmoke),
+        ('ALIGN', (0, 0), (-1, -1), 'CENTER'),
+        ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),
+        ('BOTTOMPADDING', (0, 0), (-1, 0), 12),
+        ('BACKGROUND', (0, 1), (-1, -1), colors.beige),
+        ('GRID', (0, 0), (-1, -1), 1, colors.black),
+    ])
+    table.setStyle(style)
+
+    # Adjust column widths
+    table._argW[0] = 1.0 * inch  # Order ID column
+    table._argW[1] = 2.0 * inch  # User column
+    table._argW[2] = 1.5 * inch  # Total Amount column
+    table._argW[3] = 1.5 * inch  # Date column
+
+    # Add the table to the elements list
+    elements.append(table)
+
+    # Build the PDF
+    doc.build(elements)
+    
+    return response
 
 def download_excel_report(request):
     response = HttpResponse(content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
@@ -328,7 +364,7 @@ def download_excel_report(request):
                 order.total_amount,
                 item.status,  
                 item.status,  
-                getattr(item.product.coupon, 'code', 'N/A'),  
+                getattr(item.order.coupon, 'code', 'N/A'),  
                 item.discount_amount  
             ])
 
@@ -337,6 +373,11 @@ def download_excel_report(request):
 
 
 def best_selling(request):
+    user = request.user
+    if not user.is_authenticated or not user.is_superuser:
+        return redirect('superuser:admin_login')
+    
+    
     products = Products.objects.all().order_by('-popularity')[:3]
     categories = Category.objects.annotate(total_sold=Sum('products__orderitem__quantity')).order_by('-total_sold')[:3]
     context = {

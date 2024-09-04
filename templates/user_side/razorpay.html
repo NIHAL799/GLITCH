@@ -63,6 +63,19 @@ var options = {
     "notes": {
         "address": "Razorpay Corporate Office"
     },
+
+    "handler": function (response){
+        alert("This is the handler");
+        alert(response.razorpay_payment_id);
+        alert(response.razorpay_order_id);
+        alert(response.razorpay_signature);
+    },
+    "modal": {
+        "ondismiss": function(){
+            console.log("This code runs when the popup is closed without payment");
+        }
+    },
+    
     "theme": {
         "color": "#3399cc"
     }
