@@ -71,8 +71,10 @@ def admin_product_list(request):
 
 @cache_control(no_cache=True, must_revalidate=True, no_store=True)
 def admin_add_products(request):
-    if 'username' not in request.session:
+    user = request.user
+    if not user.is_authenticated or not user.is_superuser:
         return redirect('superuser:admin_login')
+    
     if request.method == 'POST':
         form = ProductForm(request.POST, request.FILES)   
         if form.is_valid():
@@ -112,8 +114,10 @@ def admin_add_products(request):
 
 
 def manage_sizes(request, id):
-    if 'username' not in request.session:
+    user = request.user
+    if not user.is_authenticated or not user.is_superuser:
         return redirect('superuser:admin_login')
+    
     product = get_object_or_404(Products, id=id)
     sizes = ProductSize.objects.filter(product=product)
 
@@ -139,8 +143,10 @@ def manage_sizes(request, id):
     return render(request, 'admin_side/manage_sizes.html', context)
 
 def add_size(request, id):
-    if 'username' not in request.session:
+    user = request.user
+    if not user.is_authenticated or not user.is_superuser:
         return redirect('superuser:admin_login')
+    
     product = get_object_or_404(Products, id=id)
     sizes = [7,8,9]  
 
@@ -169,8 +175,10 @@ def add_size(request, id):
 
 
 def delete_size(request, id):
-    if 'username' not in request.session:
+    user = request.user
+    if not user.is_authenticated or not user.is_superuser:
         return redirect('superuser:admin_login')
+    
     size = get_object_or_404(ProductSize, id=id)
     product = size.product
 
@@ -187,8 +195,10 @@ def delete_size(request, id):
 
             
 def admin_delete_product(request,id):
-    if 'username' not in request.session:
+    user = request.user
+    if not user.is_authenticated or not user.is_superuser:
         return redirect('superuser:admin_login')
+    
     product=get_object_or_404(Products,id=id)
     if product.soft_deleted:
         product.soft_deleted=False
@@ -205,8 +215,10 @@ def admin_delete_product(request,id):
 
 @cache_control(no_cache=True,must_revalidate=True,no_store=True)
 def admin_edit_product(request,id):
-    if 'username' not in request.session:
+    user = request.user
+    if not user.is_authenticated or not user.is_superuser:
         return redirect('superuser:admin_login')
+    
     product=Products.objects.get(id=id)
     categories=Category.objects.all()
 
@@ -408,8 +420,10 @@ def post_review(request,product_id):
 
 @cache_control(no_cache=True,must_revalidate=True,no_store=True)
 def admin_edit_best(request,id):
-    if 'username' not in request.session:
+    user = request.user
+    if not user.is_authenticated or not user.is_superuser:
         return redirect('superuser:admin_login')
+    
     product=Products.objects.get(id=id)
     categories=Category.objects.all()
 

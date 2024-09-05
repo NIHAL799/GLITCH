@@ -7,7 +7,8 @@ from .forms import CouponForm
 
 
 def coupon_list(request):
-    if 'username' not in request.session:
+    user = request.user
+    if not user.is_authenticated or not user.is_superuser:
         return redirect('superuser:admin_login')
     coupons = Coupon.objects.all().order_by('-id')
     current_time = timezone.now()
@@ -19,7 +20,8 @@ def coupon_list(request):
     return render(request, 'admin_side/coupon_list.html', {'coupons': coupons})
 
 def create_coupon(request):
-    if 'username' not in request.session:
+    user = request.user
+    if not user.is_authenticated or not user.is_superuser:
         return redirect('superuser:admin_login')
     if request.method == 'POST':
         form = CouponForm(request.POST)
@@ -33,7 +35,8 @@ def create_coupon(request):
     return render(request, 'admin_side/create_coupon.html', {'form': form})
 
 def edit_coupon(request, coupon_id):
-    if 'username' not in request.session:
+    user = request.user
+    if not user.is_authenticated or not user.is_superuser:
         return redirect('superuser:admin_login')
     coupon = get_object_or_404(Coupon, id=coupon_id)
     if request.method == 'POST':
@@ -48,7 +51,8 @@ def edit_coupon(request, coupon_id):
     return render(request, 'admin_side/coupon_edit.html', {'form': form})
 
 def delete_coupon(request, coupon_id):
-    if 'username' not in request.session:
+    user = request.user
+    if not user.is_authenticated or not user.is_superuser:
         return redirect('superuser:admin_login')
     coupon = get_object_or_404(Coupon, id=coupon_id)
     if request.method == 'POST':
@@ -56,7 +60,8 @@ def delete_coupon(request, coupon_id):
         return redirect('coupons:coupon_list')
     
 def activate_deactivate(request,coupon_id):
-    if 'username' not in request.session:
+    user = request.user
+    if not user.is_authenticated or not user.is_superuser:
         return redirect('superuser:admin_login')
     coupon = get_object_or_404(Coupon, id=coupon_id)
     if coupon.is_active:

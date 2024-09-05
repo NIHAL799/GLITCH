@@ -37,7 +37,8 @@ def category_list(request):
 
 
 def add_category(request):
-    if 'username' not in request.session:
+    user = request.user
+    if not user.is_authenticated or not user.is_superuser:
         return redirect('superuser:admin_login')
     if request.method == 'POST':
         category_name = request.POST.get('category_name')
@@ -70,7 +71,8 @@ def add_category(request):
 
 
 def category_edit(request, id):
-    if 'username' not in request.session:
+    user = request.user
+    if not user.is_authenticated or not user.is_superuser:
         return redirect('superuser:admin_login')
     
     category = get_object_or_404(Category, id=id)
@@ -128,7 +130,8 @@ def category_edit(request, id):
 
 
 def category_soft_delete(request,id):
-    if 'username' not in request.session:
+    user = request.user
+    if not user.is_authenticated or not user.is_superuser:
         return redirect('superuser:admin_login')
     category = Category.objects.get(id=id)
     if category.is_deleted:
@@ -145,7 +148,8 @@ def category_soft_delete(request,id):
 
 
 def category_delete(request,id):
-    if 'username' not in request.session:
+    user = request.user
+    if not user.is_authenticated or not user.is_superuser:
         return redirect('superuser:admin_login')
     category = Category.objects.get(id)
     category.is_deleted = True

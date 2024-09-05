@@ -19,6 +19,7 @@ from django.views.decorators.csrf import csrf_exempt
 from wallet.models import Wallet,Transaction
 import json
 from django.utils.functional import SimpleLazyObject
+from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
 
 from decimal import Decimal
 from fpdf import FPDF
@@ -384,7 +385,7 @@ def cancel_order(request, item_id):
 def order_list_admin(request):
     user = request.user
     print(user)
-    if not user.is_authenticated:
+    if not user.is_authenticated or not user.is_superuser:
         return redirect('superuser:admin_login')
     elif not user.is_superuser:
         return redirect('superuser:admin_login')
@@ -401,6 +402,16 @@ def order_list_admin(request):
         orders = orders.order_by(sort_by)
     except FieldError:
         orders = orders.order_by('-id')
+
+    paginator = Paginator(orders, 10)  
+    page_number = request.GET.get('page', 1)
+
+    try:
+        orders = paginator.page(page_number)
+    except PageNotAnInteger:
+        orders = paginator.page(1)
+    except EmptyPage:
+        orders = paginator.page(paginator.num_pages)
 
     context = {
         'orders': orders,
@@ -557,17 +568,16 @@ def accept_return(request, item_id):
     elif not user.is_superuser:
         return redirect('superuser:admin_login')
 
-    
     item = get_object_or_404(OrderItem, id=item_id)
-    
-    
+
     item.status = 'return_accepted'
     item.save()
     messages.success(request, 'Return accepted successfully')
     return redirect('order:order_detail_admin', order_id=item.order.id)
 
 def reject_return(request, item_id):
-    if 'username' not in request.session:
+    user = request.user
+    if not user.is_authenticated or not user.is_superuser:
         return redirect('superuser:admin_login')
     item = get_object_or_404(OrderItem, id=item_id)
     item.status = 'return_rejected'

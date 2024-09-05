@@ -154,7 +154,6 @@ def dashboard(request):
 
 @cache_control(no_cache=True, must_revalidate=True, no_store=True)
 def admin_login(request):
-    user = request.user if request.user.is_authenticated else None
     if request.method == 'POST':
         email=request.POST.get('email')
         password=request.POST.get('password')
@@ -191,12 +190,18 @@ def customer_view(request):
     return render (request,"admin_side/customer_view.html",context)
 
 def block_user(request, user_id):
+    admin = request.user
+    if not admin.is_authenticated or not admin.is_superuser:
+        return redirect('superuser:admin_login')
     user = get_object_or_404(UserDetails, id=user_id)
     user.is_active = False 
     user.save()
     messages.success(request,f'{user.last_name} Blocked successfully')
     return redirect('superuser:customer_view')
 def unblock_user(request, user_id):
+    admin = request.user
+    if not admin.is_authenticated or not admin.is_superuser:
+        return redirect('superuser:admin_login')
     user = get_object_or_404(UserDetails, id=user_id)
     user.is_active = True  
     user.save()
@@ -205,6 +210,9 @@ def unblock_user(request, user_id):
 
 
 def sales_report(request):
+    admin = request.user
+    if not admin.is_authenticated or not admin.is_superuser:
+        return redirect('superuser:admin_login')
     form = SalesReportFilterForm(request.GET or None)
     orders = Order.objects.all()
 
