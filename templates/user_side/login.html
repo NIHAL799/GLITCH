@@ -65,12 +65,12 @@
                             </div>
                             <a href="{% url "user:forgot_password" %}">Lost your password?</a>
                         </form>
-                        <p class="text-center small text-muted mb-15">or sign up with</p>
+                        {% comment %} <p class="text-center small text-muted mb-15">or sign up with</p>
                         <div class="d-grid gap-3 mb-4">
                             <button type="button" class="login-with-google-btn" >
                                 <a href="{% url "social:begin" "google-oauth2" %}">Continue With Google</a>
                             </button>
-                        </div> 
+                        </div>  {% endcomment %}
                         <p class="text-center mb-4">Don't have account? <a href="{% url 'user:user_signup'%}">Sign up</a></p>
                     </div>
                 </div>

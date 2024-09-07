@@ -371,7 +371,7 @@
                     {% for product in cat_products %}
                     <div class="product-wrap">
                         <div class="product-img default-overlay mb-25">
-                            <a href="product-details.html">
+                            <a href="{% url "product:product_details" product.id %}">
                                 <img class="default-img" src="{{ product.product_image.url}}" alt="">
                                 <img class="hover-img" src="{{ product.product_image2.url}}" alt="">
                             </a>
