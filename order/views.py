@@ -78,7 +78,6 @@ def checkout(request):
             
             if payment_method == 'razorpay':
                 request.session['selected_address_id'] = selected_address_id
-                print('selected_address_id',selected_address_id)
                 request.session['order_notes'] = order_notes
                 notes = {'order-type':'basic order from the website'}
                 receipt_maker = 'text'
@@ -90,8 +89,7 @@ def checkout(request):
                     payment_capture  = '1'
                 ))
                 
-                callback_url = f'http://127.0.0.1:8000/order/payment_success/?address_id={selected_address_id}&user_id={user_id}'
-                print('user_iddddddddddd',user_id)
+                callback_url = f'{settings.BACKEND_ENGINE}/order/payment_success/?address_id={selected_address_id}&user_id={user_id}'
                 context={
                     'key' : settings.RAZORPAY_KEY_ID,
                     'amount': int(final_total * 100),
@@ -384,7 +382,6 @@ def cancel_order(request, item_id):
 
 def order_list_admin(request):
     user = request.user
-    print(user)
     if not user.is_authenticated or not user.is_superuser:
         return redirect('superuser:admin_login')
     elif not user.is_superuser:
@@ -591,9 +588,7 @@ import traceback
 @csrf_exempt
 def payment_success(request):
     if request.method == "POST":
-        print('Request GET data:', request.GET)
         user_id = request.GET.get('amp;user_id')
-        print('user_iddddddddddd',user_id)
         user = UserDetails.objects.get(id=user_id)
 
         try:
@@ -617,7 +612,6 @@ def payment_success(request):
 
       
             selected_address_id = request.GET.get('address_id')
-            print('selected_address_id',selected_address_id)
             order_notes = request.session.get('order_notes')
             address = Address.objects.filter(id=selected_address_id, user=user).first()
 
@@ -717,7 +711,6 @@ def payment_success(request):
         except razorpay.errors.SignatureVerificationError as e:
             return JsonResponse({'success': False, 'message': str(e)}, status=400)
         except Exception as e:
-            print(traceback.format_exc()) 
 
             return JsonResponse({'success': False, 'message': 'An unexpected error occurred.'}, status=500)
     context = {

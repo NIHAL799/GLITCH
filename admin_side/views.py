@@ -67,7 +67,6 @@ def get_most_ordered_categories_with_count():
 
 def dashboard(request):
     user = request.user
-    print(user)
     if not user.is_superuser or not user.is_authenticated:
         return redirect('superuser:admin_login')
 
@@ -162,7 +161,6 @@ def admin_login(request):
                 logout(request)
 
         user = authenticate(email=email,password=password)
-        print(user)
         if user is not None and user.is_superuser:
             login(request,user)
             return redirect('superuser:dashboard')
