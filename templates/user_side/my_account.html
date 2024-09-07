@@ -97,7 +97,7 @@ My Account
                                         </td>
                                         {% if order.payment_status == 'failed' %}
                                             <td>
-                                                <a href="{% url 'order:retry_payment' order.id %}" class="check-btn sqr-btn">View</a>
+                                                <a href="{% url 'order:retry_payment' order.id %}" class="check-btn sqr-btn">Retry Payment</a>
                                             </td>
                                         {% endif %}
                                     </tr>

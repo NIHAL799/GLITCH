@@ -728,7 +728,7 @@ def retry_payment(request,order_id):
     user = request.user
     
 
-    callback_url = 'http://127.0.0.1:8000/order/retry_payment_success/'
+    callback_url = f'{settings.BACKEND_ENGINE}/order/retry_payment_success/'
 
     razorpay_order = razorpay_client.order.create({
         'amount' :int(order.payable_amount * 100),
